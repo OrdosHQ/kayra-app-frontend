@@ -1,5 +1,9 @@
 'use client';
-import { Faucet } from '@/features/faucet';
+import dynamic from 'next/dynamic';
+
+const Faucet = dynamic(async () => (await import('@/features/faucet')).Faucet, {
+    ssr: false,
+});
 
 import styles from './page.module.scss';
 
