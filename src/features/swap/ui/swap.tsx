@@ -185,61 +185,67 @@ export const Swap: FC = () => {
         }
     }
 
-    const nillionCompute = useCallback(async (salt, amount1, address) => {
-        try {
-            const snapResponse = await getUserKeyFromSnap();
+    const nillionCompute = useCallback(
+        async (_salt: any, amount1: string, _address?: string) => {
+            try {
+                const snapResponse = await getUserKeyFromSnap();
 
-            const userKey = snapResponse?.user_key;
+                const userKey = snapResponse?.user_key;
 
-            if (!userKey) return null;
+                if (!userKey) return null;
 
-            const libraries = await getNillionClient(userKey);
+                const libraries = await getNillionClient(userKey);
 
-            const nillion = libraries.nillion;
-            const nillionClient = libraries.nillionClient;
+                const nillion = libraries.nillion;
+                const nillionClient = libraries.nillionClient;
 
-            const userId = nillionClient.user_id;
+                const userId = nillionClient.user_id;
 
-            const programId = await storeProgram(nillionClient, programName);
-            // const programId = `${userId}/${programName}`;
+                const programId = await storeProgram(
+                    nillionClient,
+                    programName,
+                );
+                // const programId = `${userId}/${programName}`;
 
-            const amount1Secret = await storeSecret(
-                nillion,
-                nillionClient,
-                programId,
-                'my_int1',
-                amount1,
-                null,
-                null,
-                null,
-                null,
-            );
+                const amount1Secret = await storeSecret(
+                    nillion,
+                    nillionClient,
+                    programId,
+                    'my_int1',
+                    amount1,
+                    null,
+                    null,
+                    null,
+                    null,
+                );
 
-            const amount2Secret = await storeSecret(
-                nillion,
-                nillionClient,
-                programId,
-                'my_int2',
-                '1000',
-                null,
-                null,
-                null,
-                null,
-            );
+                const amount2Secret = await storeSecret(
+                    nillion,
+                    nillionClient,
+                    programId,
+                    'my_int2',
+                    '1000',
+                    null,
+                    null,
+                    null,
+                    null,
+                );
 
-            if (!amount1Secret || !amount2Secret) return null;
+                if (!amount1Secret || !amount2Secret) return null;
 
-            return await compute(
-                nillion,
-                nillionClient,
-                [amount1Secret['my_int1'], amount2Secret['my_int2']],
-                programId,
-                outputs[0],
-            );
-        } catch (err) {
-            console.log(err);
-        }
-    }, []);
+                return await compute(
+                    nillion,
+                    nillionClient,
+                    [amount1Secret['my_int1'], amount2Secret['my_int2']],
+                    programId,
+                    outputs[0],
+                );
+            } catch (err) {
+                console.log(err);
+            }
+        },
+        [],
+    );
 
     const submitClickHandler = useCallback(async () => {
         try {

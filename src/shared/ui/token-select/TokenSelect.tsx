@@ -1,6 +1,6 @@
 import { FC, useCallback } from 'react';
-import { Token } from 'shared/types';
 import { TokenLogo } from '../token-logo';
+import { Token } from '@/shared/types';
 
 import styles from './TokenSelect.module.scss';
 

@@ -1,3 +1,4 @@
+'use client';
 import { Chart } from '@/entities/chart';
 import { Switch } from '@/shared/ui';
 import { Swap } from '@/features/swap';

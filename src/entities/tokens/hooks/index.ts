@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { useQuery } from '@tanstack/react-query';
 import { useMemo } from 'react';
-import { Token } from 'shared/types';
+import { Token } from '@/shared/types';
 
 export const useTokens = () => {
     const { data, isLoading } = useQuery({
