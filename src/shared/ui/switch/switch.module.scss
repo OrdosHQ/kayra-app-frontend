@@ -1,0 +1,40 @@
+.container {
+    display: flex;
+    align-items: center;
+}
+
+.item {
+    cursor: pointer;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    width: fit-content;
+    height: 40px;
+    padding: 15px;
+
+    border-radius: 16px;
+
+    font-size: 18px;
+
+    color: rgb(155, 155, 155);
+
+    &:not(.disabled):hover {
+        opacity: .8;
+    }
+
+    &:not(:last-child) {
+        margin-right: 10px;
+    }
+}
+
+.selected {
+    background-color: var(--container);
+
+    color: #fff;
+}
+
+.disabled {
+    cursor: default;
+}

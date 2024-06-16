@@ -1,0 +1,44 @@
+import { ChainId, WETH9 } from '@uniswap/sdk-core';
+import {} from '@uniswap/v2-sdk';
+import { uniswapV2PoolABI } from './uniswapV2PoolAbi';
+import { factoryABI } from './factoryAbi';
+import { erc20ABI } from './erc20Abi';
+
+export const graphqlURL =
+    'https://api.thegraph.com/subgraphs/name/uniswap/uniswap-v3';
+
+export const USDT = {
+    chain: ChainId.MAINNET,
+    address: '0xdAC17F958D2ee523a2206206994597C13D831ec7',
+    decimals: 6,
+    symbol: 'USDT',
+    name: 'Tether USD',
+    logoURI:
+        'https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0xdAC17F958D2ee523a2206206994597C13D831ec7/logo.png',
+};
+
+export const USDC = {
+    chain: ChainId.MAINNET,
+    address: '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48',
+    decimals: 6,
+    symbol: 'USDC',
+    name: 'USD Coin',
+    logoURI:
+        'https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48/logo.png',
+    sepoliaAddress: '0x669ae1E5AbA3C7f077bc1d9f2204695b37cAb6f7',
+};
+
+export const WETH = {
+    chain: ChainId.MAINNET,
+    address: WETH9[ChainId.MAINNET].address,
+    decimals: WETH9[ChainId.MAINNET].decimals,
+    symbol: 'ETH',
+    name: WETH9[ChainId.MAINNET].name ?? 'Wrapped Ethereum',
+    logoURI: `https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/${
+        WETH9[ChainId.MAINNET].address
+    }/logo.png`,
+};
+
+export const tokens = [USDT, USDC, WETH];
+
+export { uniswapV2PoolABI, factoryABI, erc20ABI };
