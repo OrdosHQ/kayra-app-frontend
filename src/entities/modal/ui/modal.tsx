@@ -5,6 +5,7 @@ import { contentFromModalType, closableModals } from '../constants';
 import { useModalStore } from '../model';
 
 import styles from './modal.module.scss';
+import Image from 'next/image';
 
 export const Modal: FC = () => {
     const closeModal = useModalStore((state) => state.closeModal);
@@ -32,13 +33,18 @@ export const Modal: FC = () => {
         () => (modalType ? closableModals.includes(modalType) : false),
         [modalType],
     );
-
     return (
         <div className={`${styles.container} ${isModalShow && styles.show}`}>
+            {/* {'NULL'} */}
             <div className={styles.content}>
                 {isCloseShow && (
                     <div onClick={closeClickCallback} className={styles.close}>
-                        <Icons.Close />
+                        <Image
+                            width={24}
+                            height={24}
+                            src="/close.svg"
+                            alt="Close modal"
+                        />
                     </div>
                 )}
                 {content}

@@ -11,9 +11,20 @@ import {
 } from '@/shared/constants';
 import { Token, CurrencyAmount, TradeType } from '@uniswap/sdk-core';
 import { Pair, Route, Trade } from '@uniswap/v2-sdk';
-import { JsonRpcProvider, ethers, parseEther, parseUnits } from 'ethers';
+import {
+    JsonRpcProvider,
+    ethers,
+    formatUnits,
+    parseEther,
+    parseUnits,
+} from 'ethers';
 import { useQuery } from '@tanstack/react-query';
-import { useAccount, useConfig, useSendTransaction } from 'wagmi';
+import {
+    useAccount,
+    useConfig,
+    useReadContract,
+    useSendTransaction,
+} from 'wagmi';
 import { readContract, writeContract } from '@wagmi/core';
 import { generateSalt } from '@/shared/utils';
 import { getNillionClient, getUserKeyFromSnap } from '@/shared/utils/nillion';
@@ -29,8 +40,8 @@ const parties = ['Party1'];
 const outputs = ['my_output'];
 
 export const Swap: FC = () => {
-    const [token1, setToken1] = useState(USDC);
-    const [token2, setToken2] = useState(USDT);
+    const [token1, setToken1] = useState(WETH);
+    const [token2, setToken2] = useState(USDC);
 
     const tokenA = useMemo(
         () =>
@@ -268,11 +279,49 @@ export const Swap: FC = () => {
 
     const button = useMemo(() => {
         if (trade) {
-            return <Button onClick={submitClickHandler}>Swap</Button>;
+            return (
+                <Button fill onClick={submitClickHandler}>
+                    Swap
+                </Button>
+            );
         }
 
-        return <Button disabled>Swap</Button>;
+        return (
+            <Button fill disabled>
+                Swap
+            </Button>
+        );
     }, [trade, submitClickHandler]);
+
+    const result1 = useReadContract({
+        abi: erc20ABI,
+        address: token1.sepoliaAddress as `0x${string}`,
+        functionName: 'balanceOf',
+        args: [address],
+    });
+
+    const balance1 = useMemo(() => {
+        if (result1.data) {
+            return formatUnits(result1.data.toString(), token1.decimals);
+        }
+
+        return '0';
+    }, [result1, token1]);
+
+    const result2 = useReadContract({
+        abi: erc20ABI,
+        address: token2.sepoliaAddress as `0x${string}`,
+        functionName: 'balanceOf',
+        args: [address],
+    });
+
+    const balance2 = useMemo(() => {
+        if (result2.data) {
+            return formatUnits(result2.data.toString(), token2.decimals);
+        }
+
+        return '0';
+    }, [result2, token2]);
 
     return (
         <div className={styles.container}>
@@ -282,7 +331,7 @@ export const Swap: FC = () => {
                     onChange={amount1ChangeHandler}
                     token={token1}
                     header={'You pay'}
-                    balance="1"
+                    balance={balance1}
                     placeholder="0"
                 />
             </div>
@@ -291,7 +340,7 @@ export const Swap: FC = () => {
                     value={trade?.outputAmount.toSignificant(6)}
                     token={token2}
                     header={'You receive'}
-                    balance="1"
+                    balance={balance2}
                     placeholder="0"
                     disabled
                 />

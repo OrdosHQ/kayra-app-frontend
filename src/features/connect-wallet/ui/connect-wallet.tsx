@@ -2,6 +2,10 @@
 import { FC, useCallback } from 'react';
 import { metaMask } from 'wagmi/connectors';
 import { useConnect, useAccount } from 'wagmi';
+import { Button } from '@/shared/ui';
+
+import styles from './connect-wallet.module.scss';
+import { ConnectKitButton } from 'connectkit';
 
 export const ConnectWallet: FC = () => {
     const { connect } = useConnect();
@@ -12,12 +16,8 @@ export const ConnectWallet: FC = () => {
     }, [connect]);
 
     return (
-        <div>
-            {!address ? (
-                <button onClick={connectClickHandler}>Connect wallet</button>
-            ) : (
-                <div>{address}</div>
-            )}
+        <div className={styles.container}>
+            <ConnectKitButton showBalance />
         </div>
     );
 };

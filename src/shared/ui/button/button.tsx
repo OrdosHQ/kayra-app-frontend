@@ -8,19 +8,21 @@ interface IButtonProps
         HTMLButtonElement
     > {
     view?: 'primary';
-    size?: 'm';
+    size?: 'm' | 's';
+    fill?: boolean;
 }
 
 export const Button: FC<IButtonProps> = ({
     view = 'primary',
     size = 'm',
+    fill = false,
     ...props
 }) => {
     return (
         <button
             className={`${styles.button} ${styles[`view_${view}`]} ${
                 styles[`size_${size}`]
-            }`}
+            } ${fill && styles['button_fill']}`}
             {...props}
         />
     );

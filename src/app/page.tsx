@@ -1,18 +1,12 @@
-import Image from 'next/image';
-import styles from './page.module.css';
-import { Modal } from '@/entities/modal';
-import { ConnectWallet } from '@/features/connect-wallet';
 import { Chart } from '@/entities/chart';
 import { Switch } from '@/shared/ui';
 import { Swap } from '@/features/swap';
 
+import styles from './page.module.css';
+
 export default function Home() {
     return (
         <>
-            <Modal />
-            <div>
-                <ConnectWallet />
-            </div>
             <div className={styles.container}>
                 <div className={styles.chart}>
                     <Chart />

@@ -13,6 +13,7 @@ interface TokenInputProps
     token?: Token;
     balance?: string;
     onMaxClick?: (amount: string) => void;
+    onTokenClick?: any;
 }
 
 export const TokenInput: FC<TokenInputProps> = ({
@@ -20,6 +21,7 @@ export const TokenInput: FC<TokenInputProps> = ({
     balance,
     token,
     onMaxClick,
+    onTokenClick,
     ...inputProps
 }) => {
     const maxClickCallback = useCallback(() => {
@@ -34,15 +36,20 @@ export const TokenInput: FC<TokenInputProps> = ({
 
             <div className={styles.content}>
                 <input {...inputProps} className={styles.input} />
-                <TokenSelect token={token} />
+                <TokenSelect onClick={onTokenClick} token={token} />
             </div>
 
             <div className={styles.footer}>
                 <div className={styles.balance}>
                     Balance: {balance} {token?.name}{' '}
-                    <span className={styles.action} onClick={maxClickCallback}>
-                        MAX
-                    </span>
+                    {onMaxClick && (
+                        <span
+                            className={styles.action}
+                            onClick={maxClickCallback}
+                        >
+                            MAX
+                        </span>
+                    )}
                 </div>
             </div>
         </div>

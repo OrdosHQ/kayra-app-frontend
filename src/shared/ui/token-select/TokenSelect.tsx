@@ -1,16 +1,20 @@
-import { FC } from 'react';
+import { FC, useCallback } from 'react';
 import { Token } from 'shared/types';
+import { TokenLogo } from '../token-logo';
 
 import styles from './TokenSelect.module.scss';
-import { TokenLogo } from '../token-logo';
 
 interface TokenSelectProps {
     token?: Token;
+    onClick?: any;
 }
 
-export const TokenSelect: FC<TokenSelectProps> = ({ token }) => {
+export const TokenSelect: FC<TokenSelectProps> = ({ token, onClick }) => {
     return (
-        <div className={`${styles.container} ${!token && styles.noToken}`}>
+        <div
+            onClick={onClick}
+            className={`${styles.container} ${!token && styles.noToken}`}
+        >
             {token ? (
                 <>
                     <div className={styles.image}>

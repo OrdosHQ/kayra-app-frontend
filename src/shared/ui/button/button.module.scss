@@ -1,7 +1,6 @@
 
 
 .button {
-    width: 100%;
     line-height: 24px;
     font-weight: 535;
     text-align: center;
@@ -22,15 +21,17 @@
     will-change: transform;
     transition: transform 450ms ease 0s;
     transform: perspective(1px) translateZ(0px);
+
+    &_fill {
+        width: 100%;
+    }
 }
 
 
 .view {
     &_primary {
         background-color: var(--action);
-        font-size: 20px;
         font-weight: 535;
-        padding: 16px;
         color: rgb(255, 255, 255);
 
         &:hover {
@@ -50,6 +51,12 @@
 
 .size {
     &_m {
+        padding: 16px;
+        font-size: 20px;
+    }
 
+    &_s {
+        padding: 8px;
+        font-size: 14px;
     }
 }
