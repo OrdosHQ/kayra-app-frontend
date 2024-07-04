@@ -26,18 +26,26 @@ import {
     useSendTransaction,
 } from 'wagmi';
 import { readContract, writeContract } from '@wagmi/core';
-import { generateSalt } from '@/shared/utils';
-import { getNillionClient, getUserKeyFromSnap } from '@/shared/utils/nillion';
-import { storeSecretsInteger } from '@/shared/utils/nillion/storeSecretsInteger';
-import { storeProgram } from '@/shared/utils/nillion/storeProgram';
-import { compute } from '@/shared/utils/nillion/compute';
-import { retrieveSecretInteger } from '@/shared/utils/nillion/retrieveSecretInteger';
+import {
+    generateSalt,
+    getQuote,
+    getUserKey,
+    initializeNillionClient,
+} from '@/shared/utils';
+import * as nillion from '@nillion/client-web';
 
 import styles from './swap.module.scss';
+import { storeSecrets } from '@/shared/utils/nillion/storeSecrets';
+import {
+    createNilChainClientAndKeplrWallet,
+    payWithKeplrWallet,
+} from '@/shared/constants/nillion';
+import { fetchBackendCompute, fetchBackendParameters } from '../api';
+import { useModalStore } from '@/entities/modal';
 
-const programName = 'addition_simple';
-const parties = ['Party1'];
-const outputs = ['my_output'];
+const programName = 'midpoint_darkpool';
+const parties = ['Party2'];
+// const outputs = ['my_output'];
 
 export const Swap: FC = () => {
     const [token1, setToken1] = useState(WETH);
@@ -136,119 +144,116 @@ export const Swap: FC = () => {
     const { address } = useAccount();
     const { sendTransactionAsync } = useSendTransaction();
     const config = useConfig();
+    const { showModal, closeModal, updateModalState } = useModalStore();
 
-    async function storeSecret(
-        nillion: any,
-        nillionClient: any,
-        programId: string,
-        secretName: string,
-        secretValue: string,
-        permissionedUserIdForRetrieveSecret: string | null,
-        permissionedUserIdForUpdateSecret: string | null,
-        permissionedUserIdForDeleteSecret: string | null,
-        permissionedUserIdForComputeSecret: string | null,
-    ) {
-        if (!programId) return null;
+    const nillionExecute = useCallback(
+        async (address) => {
+            await nillion.default();
 
-        try {
-            const partyName = parties[0];
-            const storeId = await storeSecretsInteger(
-                nillion,
-                nillionClient,
-                [{ name: secretName, value: secretValue }],
-                programId,
-                partyName,
-                permissionedUserIdForRetrieveSecret
-                    ? [permissionedUserIdForRetrieveSecret]
-                    : [],
-                permissionedUserIdForUpdateSecret
-                    ? [permissionedUserIdForUpdateSecret]
-                    : [],
-                permissionedUserIdForDeleteSecret
-                    ? [permissionedUserIdForDeleteSecret]
-                    : [],
-                permissionedUserIdForComputeSecret
-                    ? [permissionedUserIdForComputeSecret]
-                    : [],
+            const userKey = getUserKey();
+
+            const nillionClient = initializeNillionClient(userKey);
+
+            const secretForQuote = new nillion.NadaValues();
+
+            const secrentAmount = nillion.NadaValue.new_secret_integer('1000');
+            const secretAmountName = 'amount';
+
+            secretForQuote.insert(secretAmountName, secrentAmount);
+
+            const secretTokenAddress = nillion.NadaValue.new_secret_integer(
+                BigInt(token1.sepoliaAddress).toString(),
             );
-            // .then(async (store_id: string) => {
-            //     console.log('Secret stored at store_id:', store_id);
-            //     setStoredSecretsNameToStoreId((prevSecrets) => ({
-            //         ...prevSecrets,
-            //         [secretName]: store_id,
-            //     }));
-            // });
 
-            return { [secretName]: storeId };
-        } catch (err) {
-            console.log('Store secret fail', err);
-        }
-    }
+            const secretTokenAddressName = 'asset';
 
-    const nillionCompute = useCallback(
-        async (_salt: any, amount1: string, _address?: string) => {
-            try {
-                const snapResponse = await getUserKeyFromSnap();
+            secretForQuote.insert(secretTokenAddressName, secretTokenAddress);
 
-                const userKey = snapResponse?.user_key;
+            const secretReceiverAddress = nillion.NadaValue.new_secret_integer(
+                BigInt(address).toString(),
+            );
+            const secretReceiverAddressName = 'address';
 
-                if (!userKey) return null;
+            secretForQuote.insert(
+                secretReceiverAddressName,
+                secretReceiverAddress,
+            );
 
-                const libraries = await getNillionClient(userKey);
+            const ttl_days = 30;
 
-                const nillion = libraries.nillion;
-                const nillionClient = libraries.nillionClient;
+            const storeOperation = nillion.Operation.store_values(
+                secretForQuote,
+                ttl_days,
+            );
 
-                const userId = nillionClient.user_id;
+            const quoteResponse = await getQuote({
+                client: nillionClient,
+                operation: storeOperation,
+            });
 
-                const programId = await storeProgram(
-                    nillionClient,
-                    programName,
-                );
-                // const programId = `${userId}/${programName}`;
+            const quote = {
+                quote: quoteResponse,
+                quoteJson: quoteResponse.toJSON(),
+                secret: secretForQuote,
+                operation: storeOperation,
+            };
 
-                const amount1Secret = await storeSecret(
-                    nillion,
-                    nillionClient,
-                    programId,
-                    'my_int1',
-                    amount1,
-                    null,
-                    null,
-                    null,
-                    null,
-                );
+            const [nilChainClient, nilChainWallet] =
+                await createNilChainClientAndKeplrWallet();
 
-                const amount2Secret = await storeSecret(
-                    nillion,
-                    nillionClient,
-                    programId,
-                    'my_int2',
-                    '1000',
-                    null,
-                    null,
-                    null,
-                    null,
-                );
+            const paymentReceipt = await payWithKeplrWallet(
+                nilChainClient,
+                nilChainWallet,
+                quote,
+                `Storing secrets for swap ${amount1} ${
+                    token1.symbol
+                } to ${trade?.outputAmount.toSignificant(6)} ${token2.symbol}`,
+            );
 
-                if (!amount1Secret || !amount2Secret) return null;
+            console.log('paymentReceipt:', paymentReceipt);
 
-                return await compute(
-                    nillion,
-                    nillionClient,
-                    [amount1Secret['my_int1'], amount2Secret['my_int2']],
-                    programId,
-                    outputs[0],
-                );
-            } catch (err) {
-                console.log(err);
-            }
+            const backend = await fetchBackendParameters();
+
+            const permissions = {
+                usersWithRetrievePermissions: [backend.user_id_1],
+                usersWithUpdatePermissions: [backend.user_id_1],
+                usersWithDeletePermissions: [backend.user_id_1],
+                usersWithComputePermissions: [backend.user_id_1],
+                programIdForComputePermissions: backend.program_id,
+            };
+
+            const storeId = await storeSecrets({
+                nillionClient,
+                nillionSecrets: quote.secret,
+                storeSecretsReceipt: paymentReceipt.receipt!,
+                ...permissions,
+            });
+
+            console.log(storeId);
+
+            const computeResponse = await fetchBackendCompute({
+                store_id: storeId,
+                party_id: nillionClient.party_id,
+            });
+
+            console.log(storeId, computeResponse);
         },
-        [],
+        [amount1, token1, token2, trade],
     );
 
     const submitClickHandler = useCallback(async () => {
         try {
+            showModal({
+                modalType: 'transactionLoader',
+                modalState: {
+                    token1,
+                    token2,
+                    amount1,
+                    amount2: trade?.outputAmount.toSignificant(6),
+                    status: 'loading',
+                    title: 'Swap',
+                },
+            });
             const salt = generateSalt();
 
             const data = await readContract(config, {
@@ -260,28 +265,42 @@ export const Swap: FC = () => {
 
             if (!data) return null;
 
-            // if (token1.symbol === 'ETH') {
-            //     await sendTransactionAsync({
-            //         to: token1.address as `0x${string}`,
-            //         value: parseEther(amount1),
-            //     });
-            // } else {
-            //     await writeContract(config, {
-            //         abi: erc20ABI,
-            //         address: token1.sepoliaAddress as `0x${string}`,
-            //         functionName: 'transfer',
-            //         args: [data, parseUnits(amount1, token1.decimals)],
-            //     });
-            // }
+            if (token1.symbol === 'ETH') {
+                await sendTransactionAsync({
+                    to: token1.address as `0x${string}`,
+                    value: parseEther(amount1),
+                });
+            } else {
+                await writeContract(config, {
+                    abi: erc20ABI,
+                    address: token1.sepoliaAddress as `0x${string}`,
+                    functionName: 'transfer',
+                    args: [data, parseUnits(amount1, token1.decimals)],
+                });
+            }
 
-            console.log(
-                'compute response',
-                await nillionCompute(salt, amount1, address),
-            );
+            await nillionExecute(address);
+
+            updateModalState({
+                status: 'success',
+            });
         } catch (err) {
             console.log(err);
+            closeModal();
         }
-    }, [config, amount1, address, nillionCompute]);
+    }, [
+        config,
+        amount1,
+        address,
+        token1,
+        token2,
+        showModal,
+        trade,
+        nillionExecute,
+        closeModal,
+        updateModalState,
+        sendTransactionAsync,
+    ]);
 
     const button = useMemo(() => {
         if (trade) {

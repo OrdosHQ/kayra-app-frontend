@@ -1,2 +1,3 @@
-export * from "./nillionClient";
-export * from "./getUserKeyFromSnap";
+export * from './initializeNillionClient';
+export * from './getUserKey';
+export * from './getQuote';

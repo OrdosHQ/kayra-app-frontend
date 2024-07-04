@@ -35,7 +35,6 @@ export const Modal: FC = () => {
     );
     return (
         <div className={`${styles.container} ${isModalShow && styles.show}`}>
-            {/* {'NULL'} */}
             <div className={styles.content}>
                 {isCloseShow && (
                     <div onClick={closeClickCallback} className={styles.close}>

@@ -48,7 +48,21 @@ export const Faucet: FC = () => {
         return '0';
     }, [result, token1]);
 
+    const showModal = useModalStore((store) => store.showModal);
+    const closeModal = useModalStore((store) => store.closeModal);
+    const updateModalState = useModalStore((store) => store.updateModalState);
+
     const submitClickHandler = useCallback(async () => {
+        showModal({
+            modalType: 'transactionLoader',
+            modalState: {
+                token1,
+                amount1,
+                status: 'loading',
+                title: 'Faucet',
+            },
+        });
+
         try {
             await writeContract(config, {
                 abi: faucetABI,
@@ -58,13 +72,25 @@ export const Faucet: FC = () => {
                 chainId: sepolia.id,
             });
 
-            result.refetch();
+            await result.refetch();
+
+            updateModalState({
+                status: 'success',
+            });
         } catch (err) {
+            closeModal();
             console.log(err);
         }
-    }, [config, amount1, address, token1, result]);
-
-    const showModal = useModalStore((store) => store.showModal);
+    }, [
+        config,
+        amount1,
+        address,
+        token1,
+        result,
+        showModal,
+        closeModal,
+        updateModalState,
+    ]);
 
     const onTokenClick = useCallback(() => {
         showModal({
