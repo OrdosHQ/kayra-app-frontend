@@ -147,7 +147,7 @@ export const Swap: FC = () => {
     const { showModal, closeModal, updateModalState } = useModalStore();
 
     const nillionExecute = useCallback(
-        async (address) => {
+        async (address: `0x${string}`) => {
             await nillion.default();
 
             const userKey = getUserKey();
@@ -279,7 +279,7 @@ export const Swap: FC = () => {
                 });
             }
 
-            await nillionExecute(address);
+            await nillionExecute(address!);
 
             updateModalState({
                 status: 'success',

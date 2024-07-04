@@ -23,7 +23,7 @@ export const KeplrProvider: FC<PropsWithChildren> = ({ children }) => {
 
     const getBalance = async () => {
         const key = await window.keplr?.getKey(NillionChainInfo.chainId);
-        const address = key.bech32Address;
+        const address = key!.bech32Address;
 
         if (address) {
             const uri = `${NillionChainInfo.rest}/cosmos/bank/v1beta1/balances/${address}?pagination.limit=1000`;
