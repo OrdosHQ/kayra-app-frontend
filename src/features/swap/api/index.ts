@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const apiUrl = `http://46.101.136.69:8080`;
+const apiUrl = `https://46.101.136.69`;
 
 // {"party_id_1": "12D3KooWJHrXiK2JTCjJxwCCktJPSYsUsz2WHEBSB5iZtqGiZ8Qm", "user_id_1": "3rgqxWd47e171EUwe4RXP9hm45tmoXfuF8fC52S7jcFoQTnU8wPiL7hqWzyV1muak6bEg7iWhudwg4t2pM9XnXcp", "program_id": "3rgqxWd47e171EUwe4RXP9hm45tmoXfuF8fC52S7jcFoQTnU8wPiL7hqWzyV1muak6bEg7iWhudwg4t2pM9XnXcp/midpoint_darkpool"}
 
