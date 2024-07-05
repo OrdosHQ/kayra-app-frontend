@@ -5,6 +5,10 @@ import { FC, PropsWithChildren } from 'react';
 export const ConnectKitProvider: FC<PropsWithChildren> = ({ children }) => {
     return (
         <LConnectKitProvider
+            options={{
+                hideNoWalletCTA: true,
+                truncateLongENSAddress: true,
+            }}
             customTheme={{
                 '--ck-font-family':
                     '"Inter",-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,"Apple Color Emoji",Arial,sans-serif,"Segoe UI Emoji","Segoe UI Symbol"',

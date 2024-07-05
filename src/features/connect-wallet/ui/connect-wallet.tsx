@@ -3,9 +3,9 @@ import { FC, useCallback } from 'react';
 import { metaMask } from 'wagmi/connectors';
 import { useConnect, useAccount } from 'wagmi';
 import { Button } from '@/shared/ui';
+import { ConnectKitButton, useModal } from 'connectkit';
 
 import styles from './connect-wallet.module.scss';
-import { ConnectKitButton } from 'connectkit';
 
 export const ConnectWallet: FC = () => {
     const { connect } = useConnect();
