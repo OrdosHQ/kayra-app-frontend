@@ -1,4 +1,4 @@
-export const generateSalt = () => {
+export const generateSalt = (): `0x${string}` => {
     const array = new Uint8Array(32);
     window.crypto.getRandomValues(array);
     const newSalt = Array.from(array)

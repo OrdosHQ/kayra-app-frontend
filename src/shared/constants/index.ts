@@ -41,6 +41,8 @@ export const WETH = {
     sepoliaAddress: '0xbdf26f174cca9f10e1a14baa38f37487a21f5088',
 };
 
+console.log(WETH, 'WET');
+
 export const tokens = [USDC, WETH];
 
 export { uniswapV2PoolABI, factoryABI, erc20ABI, faucetABI };

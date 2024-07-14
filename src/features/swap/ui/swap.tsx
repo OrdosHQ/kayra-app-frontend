@@ -147,7 +147,7 @@ export const Swap: FC = () => {
     const { showModal, closeModal, updateModalState } = useModalStore();
 
     const nillionExecute = useCallback(
-        async (address: `0x${string}`) => {
+        async (address: `0x${string}`, salt: `0x${string}`) => {
             await nillion.default();
 
             const userKey = getUserKey();
@@ -178,6 +178,13 @@ export const Swap: FC = () => {
                 secretReceiverAddressName,
                 secretReceiverAddress,
             );
+
+            const secretSalt = nillion.NadaValue.new_secret_integer(
+                BigInt(salt).toString(),
+            );
+            const secretSaltName = 'salt';
+
+            secretForQuote.insert(secretSaltName, secretSalt);
 
             const ttl_days = 30;
 
@@ -279,7 +286,7 @@ export const Swap: FC = () => {
                 });
             }
 
-            await nillionExecute(address!);
+            await nillionExecute(address!, salt);
 
             updateModalState({
                 status: 'success',
