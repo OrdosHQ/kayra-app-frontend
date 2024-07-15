@@ -13,7 +13,7 @@ export const Header: FC = () => {
     return (
         <div className={styles.container}>
             <div>
-                <Image width={200} height={60} src="/logo.svg" alt="Aphotic" />
+                <Image width={144} height={40} src="/logo.svg" alt="Aphotic" />
             </div>
 
             <div className={styles.navigation}>
