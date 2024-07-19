@@ -25,7 +25,11 @@ import {
     useReadContract,
     useSendTransaction,
 } from 'wagmi';
-import { readContract, writeContract } from '@wagmi/core';
+import {
+    readContract,
+    waitForTransactionReceipt,
+    writeContract,
+} from '@wagmi/core';
 import {
     generateSalt,
     getQuote,
@@ -40,7 +44,11 @@ import {
     createNilChainClientAndKeplrWallet,
     payWithKeplrWallet,
 } from '@/shared/constants/nillion';
-import { fetchBackendCompute, fetchBackendParameters } from '../api';
+import {
+    fetchBackendCompute,
+    fetchBackendParameters,
+    fetchExecutorId,
+} from '../api';
 import { useModalStore } from '@/entities/modal';
 
 const programName = 'midpoint_darkpool';
@@ -147,16 +155,16 @@ export const Swap: FC = () => {
     const { showModal, closeModal, updateModalState } = useModalStore();
 
     const nillionExecute = useCallback(
-        async (address: `0x${string}`, salt: `0x${string}`) => {
+        async (address: `0x${string}`, salt: `0x${string}`, amount: string) => {
             await nillion.default();
 
             const userKey = getUserKey();
-
+            console.log(userKey);
             const nillionClient = initializeNillionClient(userKey);
 
             const secretForQuote = new nillion.NadaValues();
 
-            const secrentAmount = nillion.NadaValue.new_secret_integer('1000');
+            const secrentAmount = nillion.NadaValue.new_secret_integer(amount);
             const secretAmountName = 'amount';
 
             secretForQuote.insert(secretAmountName, secrentAmount);
@@ -220,12 +228,13 @@ export const Swap: FC = () => {
             console.log('paymentReceipt:', paymentReceipt);
 
             const backend = await fetchBackendParameters();
+            const executorId = await fetchExecutorId();
 
             const permissions = {
-                usersWithRetrievePermissions: [backend.user_id_1],
-                usersWithUpdatePermissions: [backend.user_id_1],
-                usersWithDeletePermissions: [backend.user_id_1],
-                usersWithComputePermissions: [backend.user_id_1],
+                usersWithRetrievePermissions: [executorId],
+                usersWithUpdatePermissions: [executorId],
+                usersWithDeletePermissions: [executorId],
+                usersWithComputePermissions: [executorId],
                 programIdForComputePermissions: backend.program_id,
             };
 
@@ -238,12 +247,11 @@ export const Swap: FC = () => {
 
             console.log(storeId);
 
-            const computeResponse = await fetchBackendCompute({
+            return await fetchBackendCompute({
                 store_id: storeId,
                 party_id: nillionClient.party_id,
+                executor_id: executorId,
             });
-
-            console.log(storeId, computeResponse);
         },
         [amount1, token1, token2, trade],
     );
@@ -262,9 +270,9 @@ export const Swap: FC = () => {
                 },
             });
             const salt = generateSalt();
-
+            console.log('salt:', salt, salt.length, BigInt(salt));
             const data = await readContract(config, {
-                address: '0x2bf09A74b83263FB72Aa36D81a5D1e1c1cd9A67E',
+                address: '0x451021801954e3cb0e37eebe95284b0e1134027e',
                 functionName: 'computeOrderWalletAddress',
                 args: [salt, address],
                 abi: factoryABI,
@@ -272,21 +280,43 @@ export const Swap: FC = () => {
 
             if (!data) return null;
 
+            let amount: any = null;
+
             if (token1.symbol === 'ETH') {
+                amount = parseEther(amount1);
+
                 await sendTransactionAsync({
                     to: token1.address as `0x${string}`,
-                    value: parseEther(amount1),
+                    value: amount,
                 });
             } else {
+                amount = parseUnits(amount1, token1.decimals);
+
                 await writeContract(config, {
                     abi: erc20ABI,
                     address: token1.sepoliaAddress as `0x${string}`,
                     functionName: 'transfer',
-                    args: [data, parseUnits(amount1, token1.decimals)],
+                    args: [data, amount],
                 });
             }
 
-            await nillionExecute(address!, salt);
+            console.log(amount.toString());
+
+            const response = await nillionExecute(
+                address!,
+                salt,
+                amount.toString(),
+            );
+
+            await waitForTransactionReceipt(config, {
+                hash: response.settlement_result.tx_hash,
+                confirmations: 1,
+            });
+
+            window.open(
+                `https://sepolia.etherscan.io/tx/${response.settlement_result.tx_hash}`,
+                '_blank',
+            );
 
             updateModalState({
                 status: 'success',

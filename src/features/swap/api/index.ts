@@ -2,7 +2,13 @@ import axios from 'axios';
 
 const apiUrl = `https://app.aphotic.ai`;
 
-// {"party_id_1": "12D3KooWJHrXiK2JTCjJxwCCktJPSYsUsz2WHEBSB5iZtqGiZ8Qm", "user_id_1": "3rgqxWd47e171EUwe4RXP9hm45tmoXfuF8fC52S7jcFoQTnU8wPiL7hqWzyV1muak6bEg7iWhudwg4t2pM9XnXcp", "program_id": "3rgqxWd47e171EUwe4RXP9hm45tmoXfuF8fC52S7jcFoQTnU8wPiL7hqWzyV1muak6bEg7iWhudwg4t2pM9XnXcp/midpoint_darkpool"}
+export const fetchExecutorId = async () => {
+    return await axios
+        .get<{
+            user_id: string;
+        }>(`${apiUrl}/executor`)
+        .then((res) => res.data.user_id);
+};
 
 export const fetchBackendParameters = async () => {
     return await axios
@@ -14,12 +20,28 @@ export const fetchBackendParameters = async () => {
         .then((res) => res.data);
 };
 
-// curl POST -H "Content-Type: application/json" localhost:8080/order -d '{"party_name":"Party2", "party_id": "12D3KooWNHNG5akLrVB1u6CDEjGdugthQunJkg59cxZNQ1qKyTdF", "store_id":"efccd162-cdbd-4b70-8313-10f83f889f75"}'
-
-export const fetchBackendCompute = ({ store_id, party_id }: any) => {
-    return axios.post(`${apiUrl}/order`, {
-        store_id,
-        party_id,
-        party_name: 'Party2',
-    });
+export const fetchBackendCompute = ({
+    store_id,
+    party_id,
+    executor_id,
+}: any) => {
+    return axios
+        .post<{
+            matching_result: {
+                amount_out: number;
+                address: number;
+                amount_in: number;
+                salt: number;
+                asset: number;
+            };
+            settlement_result: {
+                tx_hash: `0x${string}`;
+                status: string;
+            };
+        }>(`${apiUrl}/order`, {
+            store_id,
+            party_id,
+            executor_id,
+        })
+        .then((res) => res.data);
 };
