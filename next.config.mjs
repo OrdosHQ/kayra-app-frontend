@@ -21,10 +21,25 @@ const nextConfig = {
             {
                 source: '/:path*',
                 headers: [
-                    { key: 'Cross-Origin-Opener-Policy', value: 'unsafe-none' },
                     {
                         key: 'Cross-Origin-Embedder-Policy',
-                        value: 'unsafe-none',
+                        value: 'require-corp',
+                    },
+                    {
+                        key: 'Cross-Origin-Opener-Policy',
+                        value: 'same-origin',
+                    },
+                    {
+                        key: 'Access-Control-Allow-Origin',
+                        value: '*',
+                    },
+                    {
+                        key: 'Access-Control-Allow-Methods',
+                        value: 'GET, POST, PUT, DELETE, OPTIONS',
+                    },
+                    {
+                        key: 'Access-Control-Allow-Headers',
+                        value: '*',
                     },
                 ],
             },
