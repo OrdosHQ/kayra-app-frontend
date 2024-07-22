@@ -29,7 +29,8 @@ import Burger from './icons/burger.svg';
 import Upload from './icons/upload.svg';
 import Verified from './icons/verified.svg';
 import Star from './icons/star.svg';
-import { Leo, Puzzle } from './images';
+import Keplr from './icons/keplr.svg';
+import MetaMask from './icons/metamask.svg';
 
 export const Icons = {
     Logo,
@@ -46,8 +47,6 @@ export const Icons = {
     Plus,
     Minus,
     Info,
-    Puzzle,
-    Leo,
     Success,
     Loader,
     Copy,
@@ -65,4 +64,6 @@ export const Icons = {
     Upload,
     Verified,
     Star,
+    MetaMask,
+    Keplr,
 };

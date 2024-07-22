@@ -270,7 +270,7 @@ export const Swap: FC = () => {
                 },
             });
             const salt = generateSalt();
-            console.log('salt:', salt, salt.length, BigInt(salt));
+
             const data = await readContract(config, {
                 address: '0x451021801954e3cb0e37eebe95284b0e1134027e',
                 functionName: 'computeOrderWalletAddress',
@@ -300,8 +300,6 @@ export const Swap: FC = () => {
                 });
             }
 
-            console.log(amount.toString());
-
             const response = await nillionExecute(
                 address!,
                 salt,
@@ -322,7 +320,6 @@ export const Swap: FC = () => {
                 status: 'success',
             });
         } catch (err) {
-            console.log(err);
             closeModal();
         }
     }, [

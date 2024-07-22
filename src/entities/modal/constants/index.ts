@@ -1,3 +1,7 @@
-export const closableModals = ['selectToken', 'transactionLoader'];
+export const closableModals = [
+    'selectToken',
+    'transactionLoader',
+    'connectWallet',
+];
 
 export { contentFromModalType } from './mapper';

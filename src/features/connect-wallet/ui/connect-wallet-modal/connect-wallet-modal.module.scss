@@ -1,0 +1,46 @@
+.container {
+    width: 400px;
+    max-width: 100%;
+    
+    padding: 20px;
+    border-radius: 20px;
+    border: 1px solid #242424;
+
+    background-color: var(--container);
+}
+
+.title {
+    font-weight: 500;
+
+    font-size: 18px;
+    color: #fff;
+}
+
+.content {
+    margin-top: 20px;
+}
+
+.wallet {
+    cursor: pointer;
+    
+    display: flex;
+    align-items: center;
+
+    color: rgb(155, 155, 155);
+
+    &:not(:last-child) {
+        margin-bottom: 16px;
+    }
+
+    &:hover {
+        color: rgb(255, 255, 255);
+    }
+
+    &Icon {
+        margin-right: 16px;
+    }
+
+    &Title {
+        font-size: 18px;
+    }
+}

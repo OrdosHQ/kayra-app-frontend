@@ -1,6 +1,6 @@
 'use client';
 import { FC } from 'react';
-import { ConnectWallet } from '@/features/connect-wallet';
+import { ConnectWalletButton } from '@/features/connect-wallet';
 import { usePathname } from 'next/navigation';
 import Link from 'next/link';
 import Image from 'next/image';
@@ -29,7 +29,7 @@ export const Header: FC = () => {
                 </Link>
             </div>
 
-            <ConnectWallet />
+            <ConnectWalletButton />
         </div>
     );
 };

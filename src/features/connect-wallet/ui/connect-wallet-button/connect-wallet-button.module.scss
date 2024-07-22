@@ -1,0 +1,26 @@
+.wallets {
+    display: flex;
+    align-items: center;
+}
+
+.wallet {
+    cursor: pointer;
+    
+    display: flex;
+    align-items: center;
+
+    background-color: var(--container);
+    border-radius: 16px;
+
+    padding: 4px;
+
+    color: #fff;
+
+    &:not(:last-child) {
+        margin-right: 8px;
+    }
+
+    & span {
+        margin-left: 8px;
+    }
+}
