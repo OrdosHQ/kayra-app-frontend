@@ -9,7 +9,11 @@ import {
     useReadContract,
     useSendTransaction,
 } from 'wagmi';
-import { readContract, writeContract } from '@wagmi/core';
+import {
+    readContract,
+    waitForTransactionReceipt,
+    writeContract,
+} from '@wagmi/core';
 import { formatUnits, parseUnits } from 'ethers';
 import { sepolia } from 'wagmi/chains';
 
@@ -64,12 +68,17 @@ export const Faucet: FC = () => {
         });
 
         try {
-            await writeContract(config, {
+            const tx = await writeContract(config, {
                 abi: faucetABI,
                 address: token1.sepoliaAddress as `0x${string}`,
                 functionName: 'mint',
                 args: [address, parseUnits(amount1, token1.decimals)],
                 chainId: sepolia.id,
+            });
+
+            await waitForTransactionReceipt(config, {
+                hash: tx,
+                confirmations: 1,
             });
 
             await result.refetch();
