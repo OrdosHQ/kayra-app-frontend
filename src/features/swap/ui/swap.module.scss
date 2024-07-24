@@ -2,6 +2,38 @@
     width: 100%;
 }
 
+.form {
+    position: relative;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+    margin-bottom: 10px;
+}
+
+.swap {
+    cursor: pointer;
+    
+    position: absolute;
+
+    width: 50px;
+    height: 50px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    padding: 5px 5px;
+
+    z-index: 10;
+
+    background-color: var(--container);
+    border: 5px solid var(--background);
+    border-radius: 12px;
+}
+
 .item {
     &:not(:last-child) {
         margin-bottom: 10px;

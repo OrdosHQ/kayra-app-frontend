@@ -44,7 +44,7 @@ export const Chart: FC = () => {
 
     useEffect(() => {
         const defaultProps: Omit<ChartContainerProps, 'container'> = {
-            symbol: 'Arcane Finance:WETH/USDC',
+            symbol: 'Kayra Exchange:WETH/USDC',
             interval: 'H' as ResolutionString,
             datafeedUrl: 'https://demo_feed.tradingview.com',
             libraryPath: '/charting_library/',

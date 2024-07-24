@@ -50,6 +50,7 @@ import {
     fetchExecutorId,
 } from '../api';
 import { useModalStore } from '@/entities/modal';
+import Image from 'next/image';
 
 const programName = 'midpoint_darkpool';
 const parties = ['Party2'];
@@ -153,6 +154,13 @@ export const Swap: FC = () => {
     const { sendTransactionAsync } = useSendTransaction();
     const config = useConfig();
     const { showModal, closeModal, updateModalState } = useModalStore();
+
+    const swapClickHandler = useCallback(() => {
+        setToken1(token2);
+        setToken2(token1);
+
+        setAmount1(trade?.outputAmount.toSignificant(6) as any);
+    }, [token1, token2, trade]);
 
     const nillionExecute = useCallback(
         async (address: `0x${string}`, salt: `0x${string}`, amount: string) => {
@@ -384,25 +392,35 @@ export const Swap: FC = () => {
 
     return (
         <div className={styles.container}>
-            <div className={styles.item}>
-                <TokenInput
-                    value={amount1}
-                    onChange={amount1ChangeHandler}
-                    token={token1}
-                    header={'You pay'}
-                    balance={balance1}
-                    placeholder="0"
-                />
-            </div>
-            <div className={styles.item}>
-                <TokenInput
-                    value={trade?.outputAmount.toSignificant(6)}
-                    token={token2}
-                    header={'You receive'}
-                    balance={balance2}
-                    placeholder="0"
-                    disabled
-                />
+            <div className={styles.form}>
+                <div className={styles.item}>
+                    <TokenInput
+                        value={amount1}
+                        onChange={amount1ChangeHandler}
+                        token={token1}
+                        header={'You pay'}
+                        balance={balance1}
+                        placeholder="0"
+                    />
+                </div>
+                <div onClick={swapClickHandler} className={styles.swap}>
+                    <Image
+                        src="/assets/icons/arrow-bottom.svg"
+                        width={35}
+                        height={35}
+                        alt="arrow"
+                    />
+                </div>
+                <div className={styles.item}>
+                    <TokenInput
+                        value={trade?.outputAmount.toSignificant(6)}
+                        token={token2}
+                        header={'You receive'}
+                        balance={balance2}
+                        placeholder="0"
+                        disabled
+                    />
+                </div>
             </div>
 
             <div className={styles.action}>{button}</div>

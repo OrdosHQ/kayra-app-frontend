@@ -6,9 +6,7 @@ const api_root = 'https://min-api.cryptocompare.com';
 const history: any = {};
 
 const tokenMapper: any = {
-    WBTC: 'BTC',
     USDC: 'USDC',
-    USDT: 'USDT',
     WETH: 'ETH',
 };
 
@@ -18,45 +16,10 @@ export async function getAllSymbols() {
     //     .then((response) => response.data);
     const allSymbols: any = [
         {
-            description: 'USDC/USDT',
-            exchange: 'Arcane Finance',
-            full_name: 'Arcane Finance:USDC/USDT',
-            symbol: 'USDC/USDT',
-            type: 'crypto',
-        },
-        {
-            description: 'WETH/USDT',
-            exchange: 'Arcane Finance',
-            full_name: 'Arcane Finance:WETH/USDT',
-            symbol: 'WETH/USDT',
-            type: 'crypto',
-        },
-        {
             description: 'WETH/USDC',
-            exchange: 'Arcane Finance',
-            full_name: 'Arcane Finance:WETH/USDC',
+            exchange: 'Kayra Exchange',
+            full_name: 'Kayra Exchange:WETH/USDC',
             symbol: 'WETH/USDC',
-            type: 'crypto',
-        },
-        {
-            description: 'WBTC/USDC',
-            exchange: 'Arcane Finance',
-            full_name: 'Arcane Finance:WBTC/USDC',
-            symbol: 'WBTC/USDC',
-            type: 'crypto',
-        },
-        {
-            description: 'WBTC/USDT',
-            exchange: 'Arcane Finance',
-            full_name: 'Arcane Finance:WBTC/USDT',
-            symbol: 'WBTC/USDT',
-            type: 'crypto',
-        },
-        {
-            description: 'WETH/WBTC',
-            exchange: 'Arcane Finance',
-            full_name: 'Arcane Finance:WETH/WBTC',
-            symbol: 'WETH/WBTC',
             type: 'crypto',
         },
     ];
