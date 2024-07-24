@@ -81,7 +81,7 @@ export const Swap: FC = () => {
                 token2.symbol,
                 token2.name,
             ),
-        [token1],
+        [token2],
     );
 
     const [amount1, setAmount1] = useState('');
