@@ -68,6 +68,6 @@ export async function storeSecrets({
 
         return store_id;
     } catch (error) {
-        return error;
+        throw error;
     }
 }

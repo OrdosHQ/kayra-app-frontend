@@ -25,7 +25,7 @@ export const config: NillionEnvConfig = {
         keys: [process.env.NEXT_PUBLIC_NILLION_NILCHAIN_PRIVATE_KEY || ''],
         chainInfo: {
             rpc: process.env.NEXT_PUBLIC_NILLION_NILCHAIN_JSON_RPC || '',
-            rest: 'https://testnet-nillion-api.lavenderfive.com',
+            rest: 'https://nillion-testnet-api.polkachu.com',
             chainId: process.env.NEXT_PUBLIC_NILLION_NILCHAIN_CHAIN_ID || '',
             chainName: process.env.NEXT_PUBLIC_NILLION_NILCHAIN_CHAIN_ID || '',
             chainSymbolImageUrl:

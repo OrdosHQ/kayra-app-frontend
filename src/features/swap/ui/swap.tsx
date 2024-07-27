@@ -51,6 +51,7 @@ import {
 } from '../api';
 import { useModalStore } from '@/entities/modal';
 import Image from 'next/image';
+import { useAsyncInitialize } from '@/shared/hooks';
 
 const programName = 'midpoint_darkpool';
 const parties = ['Party2'];
@@ -164,102 +165,115 @@ export const Swap: FC = () => {
 
     const nillionExecute = useCallback(
         async (address: `0x${string}`, salt: `0x${string}`, amount: string) => {
-            await nillion.default();
+            try {
+                await nillion.default();
 
-            const userKey = getUserKey();
-            console.log(userKey);
-            const nillionClient = initializeNillionClient(userKey);
+                const userKey = getUserKey();
+                console.log(userKey);
+                const nillionClient = initializeNillionClient(userKey);
 
-            const secretForQuote = new nillion.NadaValues();
+                const secretForQuote = new nillion.NadaValues();
 
-            const secrentAmount = nillion.NadaValue.new_secret_integer(amount);
-            const secretAmountName = 'amount';
+                const secrentAmount =
+                    nillion.NadaValue.new_secret_integer(amount);
+                const secretAmountName = 'amount';
 
-            secretForQuote.insert(secretAmountName, secrentAmount);
+                secretForQuote.insert(secretAmountName, secrentAmount);
 
-            const secretTokenAddress = nillion.NadaValue.new_secret_integer(
-                BigInt(token1.sepoliaAddress).toString(),
-            );
+                const secretTokenAddress = nillion.NadaValue.new_secret_integer(
+                    BigInt(token1.sepoliaAddress).toString(),
+                );
 
-            const secretTokenAddressName = 'asset';
+                const secretTokenAddressName = 'asset';
 
-            secretForQuote.insert(secretTokenAddressName, secretTokenAddress);
+                secretForQuote.insert(
+                    secretTokenAddressName,
+                    secretTokenAddress,
+                );
 
-            const secretReceiverAddress = nillion.NadaValue.new_secret_integer(
-                BigInt(address).toString(),
-            );
-            const secretReceiverAddressName = 'address';
+                const secretReceiverAddress =
+                    nillion.NadaValue.new_secret_integer(
+                        BigInt(address).toString(),
+                    );
+                const secretReceiverAddressName = 'address';
 
-            secretForQuote.insert(
-                secretReceiverAddressName,
-                secretReceiverAddress,
-            );
+                secretForQuote.insert(
+                    secretReceiverAddressName,
+                    secretReceiverAddress,
+                );
 
-            const secretSalt = nillion.NadaValue.new_secret_integer(
-                BigInt(salt).toString(),
-            );
-            const secretSaltName = 'salt';
+                const secretSalt = nillion.NadaValue.new_secret_integer(
+                    BigInt(salt).toString(),
+                );
+                const secretSaltName = 'salt';
 
-            secretForQuote.insert(secretSaltName, secretSalt);
+                secretForQuote.insert(secretSaltName, secretSalt);
 
-            const ttl_days = 30;
+                const ttl_days = 30;
 
-            const storeOperation = nillion.Operation.store_values(
-                secretForQuote,
-                ttl_days,
-            );
+                const storeOperation = nillion.Operation.store_values(
+                    secretForQuote,
+                    ttl_days,
+                );
 
-            const quoteResponse = await getQuote({
-                client: nillionClient,
-                operation: storeOperation,
-            });
+                const quoteResponse = await getQuote({
+                    client: nillionClient,
+                    operation: storeOperation,
+                });
 
-            const quote = {
-                quote: quoteResponse,
-                quoteJson: quoteResponse.toJSON(),
-                secret: secretForQuote,
-                operation: storeOperation,
-            };
+                const quote = {
+                    quote: quoteResponse,
+                    quoteJson: quoteResponse.toJSON(),
+                    secret: secretForQuote,
+                    operation: storeOperation,
+                };
 
-            const [nilChainClient, nilChainWallet] =
-                await createNilChainClientAndKeplrWallet();
+                const [nilChainClient, nilChainWallet] =
+                    await createNilChainClientAndKeplrWallet();
 
-            const paymentReceipt = await payWithKeplrWallet(
-                nilChainClient,
-                nilChainWallet,
-                quote,
-                `Storing secrets for swap ${amount1} ${
-                    token1.symbol
-                } to ${trade?.outputAmount.toSignificant(6)} ${token2.symbol}`,
-            );
+                const paymentReceipt = await payWithKeplrWallet(
+                    nilChainClient,
+                    nilChainWallet,
+                    quote,
+                    `Storing secrets for swap ${amount1} ${
+                        token1.symbol
+                    } to ${trade?.outputAmount.toSignificant(6)} ${
+                        token2.symbol
+                    }`,
+                );
 
-            console.log('paymentReceipt:', paymentReceipt);
+                console.log('paymentReceipt:', paymentReceipt);
 
-            const backend = await fetchBackendParameters();
-            const executorId = await fetchExecutorId();
+                const backend = await fetchBackendParameters();
+                const executorId = await fetchExecutorId();
 
-            const permissions = {
-                usersWithRetrievePermissions: [executorId],
-                usersWithUpdatePermissions: [executorId],
-                usersWithDeletePermissions: [executorId],
-                usersWithComputePermissions: [executorId],
-                programIdForComputePermissions: backend.program_id,
-            };
+                const permissions = {
+                    usersWithRetrievePermissions: [executorId],
+                    usersWithUpdatePermissions: [executorId],
+                    usersWithDeletePermissions: [executorId],
+                    usersWithComputePermissions: [executorId],
+                    programIdForComputePermissions: backend.program_id,
+                };
 
-            const storeId = await storeSecrets({
-                nillionClient,
-                nillionSecrets: quote.secret,
-                storeSecretsReceipt: paymentReceipt.receipt!,
-                ...permissions,
-            });
+                const storeId = await storeSecrets({
+                    nillionClient,
+                    nillionSecrets: quote.secret,
+                    storeSecretsReceipt: paymentReceipt.receipt!,
+                    ...permissions,
+                });
 
-            console.log(storeId);
+                console.log(storeId);
 
-            return await fetchBackendCompute({
-                store_id: storeId,
-                party_id: nillionClient.party_id,
-                executor_id: executorId,
-            });
+                return await fetchBackendCompute({
+                    store_id: storeId,
+                    party_id: nillionClient.party_id,
+                    executor_id: executorId,
+                });
+            } catch (err) {
+                console.log(err);
+
+                throw err;
+            }
         },
         [amount1, token1, token2, trade],
     );
@@ -319,13 +333,9 @@ export const Swap: FC = () => {
                 confirmations: 1,
             });
 
-            window.open(
-                `https://sepolia.etherscan.io/tx/${response.settlement_result.tx_hash}`,
-                '_blank',
-            );
-
             updateModalState({
                 status: 'success',
+                link: `https://sepolia.etherscan.io/tx/${response.settlement_result.tx_hash}`,
             });
         } catch (err) {
             closeModal();

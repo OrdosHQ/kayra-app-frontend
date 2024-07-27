@@ -1,15 +1,22 @@
 'use client';
-import { FC } from 'react';
+import { FC, useCallback } from 'react';
 import { useModalStore } from '@/entities/modal';
 import { Icons } from '@/assets';
 
 import styles from './transaction-loader.module.scss';
 import Image from 'next/image';
-import { TokenLogo } from '@/shared/ui';
+import { Button, TokenLogo } from '@/shared/ui';
 
 export const TransactionLoader: FC = () => {
     const { state } = useModalStore();
     console.log(state);
+
+    const openLinkHandler = useCallback((link: string) => {
+        return () => {
+            window.open(link, '_blank');
+        };
+    }, []);
+
     return (
         <div className={styles.container}>
             <div className={styles.loader}>
@@ -47,6 +54,13 @@ export const TransactionLoader: FC = () => {
                     </>
                 )}
             </div>
+            {state.link && (
+                <div className={styles.footer}>
+                    <Button fill size="s" onClick={openLinkHandler(state.link)}>
+                        Open in Explorer
+                    </Button>
+                </div>
+            )}
         </div>
     );
 };
