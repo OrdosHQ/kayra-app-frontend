@@ -37,7 +37,6 @@ import {
     initializeNillionClient,
 } from '@/shared/utils';
 import * as nillion from '@nillion/client-web';
-
 import styles from './swap.module.scss';
 import { storeSecrets } from '@/shared/utils/nillion/storeSecrets';
 import {
@@ -51,11 +50,8 @@ import {
 } from '../api';
 import { useModalStore } from '@/entities/modal';
 import Image from 'next/image';
-import { useAsyncInitialize } from '@/shared/hooks';
 
-const programName = 'midpoint_darkpool';
-const parties = ['Party2'];
-// const outputs = ['my_output'];
+nillion.default();
 
 export const Swap: FC = () => {
     const [token1, setToken1] = useState(WETH);
@@ -166,8 +162,6 @@ export const Swap: FC = () => {
     const nillionExecute = useCallback(
         async (address: `0x${string}`, salt: `0x${string}`, amount: string) => {
             try {
-                await nillion.default();
-
                 const userKey = getUserKey();
                 console.log(userKey);
                 const nillionClient = initializeNillionClient(userKey);
