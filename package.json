@@ -27,7 +27,6 @@
     "react": "^18",
     "react-dom": "^18",
     "sass": "^1.77.4",
-    "trading-view": "git+https://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:x-oauth-basic@github.com/arcane-finance-defi/TradingViewChart.git",
     "wagmi": "^2.9.11",
     "zustand": "^4.5.2"
   },
