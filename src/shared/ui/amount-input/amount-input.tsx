@@ -1,7 +1,7 @@
 'use client';
 import { Token } from '@/shared/types';
 import { FC } from 'react';
-import { Textfit } from 'react-textfit';
+import { Textfit } from 'polyton-react-textfit';
 
 import styles from './amount-input.module.scss';
 

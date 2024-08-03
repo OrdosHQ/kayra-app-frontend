@@ -127,8 +127,6 @@ export const Chart: FC = () => {
             });
         });
 
-        // tvWidget.setCSSCustomProperty('--tv-color-pane-background', '#fff');
-
         return () => {
             tvWidget.remove();
         };
@@ -157,24 +155,6 @@ export const Chart: FC = () => {
             );
         }
     }, [widget]);
-
-    // const { fromToken, toToken } = useTradeStore();
-
-    // const symbolString = useMemo(() => {
-    //     if (fromToken && toToken) {
-    //         return symbolMapper[fromToken][toToken];
-    //     }
-
-    //     return null;
-    // }, [fromToken, toToken]);
-
-    // useEffect(() => {
-    //     if (widget && widget.setSymbol && symbolString) {
-    //         widget?.setSymbol(symbolString, '1h' as any, () => {
-    //             console.log('SYMBOL CHANGED');
-    //         });
-    //     }
-    // }, [symbolString, widget]);
 
     return <div className={'chart'} ref={chartContainerRef}></div>;
 };
