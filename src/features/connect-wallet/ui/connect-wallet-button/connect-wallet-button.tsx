@@ -3,7 +3,6 @@ import { FC, useCallback } from 'react';
 import { metaMask } from 'wagmi/connectors';
 import { useConnect, useAccount } from 'wagmi';
 import { Button } from '@/shared/ui';
-import { ConnectKitButton } from 'connectkit';
 import Image from 'next/image';
 import { getKeplr, shortAddress, signerViaKeplr } from '@/shared/utils';
 import { useAsyncInitialize } from '@/shared/hooks';
