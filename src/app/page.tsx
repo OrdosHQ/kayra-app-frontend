@@ -13,10 +13,6 @@ const Swap = dynamic(async () => (await import('@/features/swap')).Swap, {
     ssr: false,
 });
 
-// import { Chart } from '@/entities/chart';
-// import { Switch } from '@/shared/ui';
-// import { Swap } from '@/features/swap';
-
 import styles from './page.module.css';
 
 export default function Home() {

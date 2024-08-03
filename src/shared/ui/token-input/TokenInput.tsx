@@ -1,6 +1,6 @@
 import { FC, useCallback } from 'react';
 import { Token } from '@/shared/types';
-import { TokenSelect } from '@/shared/ui';
+import { TokenSelect, AmountInput } from '@/shared/ui';
 
 import styles from './TokenInput.module.scss';
 
@@ -12,6 +12,7 @@ interface TokenInputProps
     header?: string;
     token?: Token;
     balance?: string;
+    usd?: string;
     onMaxClick?: (amount: string) => void;
     onTokenClick?: any;
 }
@@ -20,6 +21,7 @@ export const TokenInput: FC<TokenInputProps> = ({
     header,
     balance,
     token,
+    usd,
     onMaxClick,
     onTokenClick,
     ...inputProps
@@ -32,16 +34,21 @@ export const TokenInput: FC<TokenInputProps> = ({
 
     return (
         <div className={styles.container}>
-            {header && <div className={styles.header}>{header}</div>}
+            <div className={styles.header}>
+                <TokenSelect
+                    balance={balance}
+                    onClick={onTokenClick}
+                    token={token}
+                />
+            </div>
 
             <div className={styles.content}>
-                <input {...inputProps} className={styles.input} />
-                <TokenSelect onClick={onTokenClick} token={token} />
+                <AmountInput token={token} {...inputProps} />
             </div>
 
             <div className={styles.footer}>
+                {/* <div className={styles.usd}>$ {usd || '0.0'}</div> */}
                 <div className={styles.balance}>
-                    Balance: {balance} {token?.name}{' '}
                     {onMaxClick && (
                         <span
                             className={styles.action}

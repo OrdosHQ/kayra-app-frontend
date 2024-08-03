@@ -2,12 +2,11 @@
     background-color: var(--container);
     border-radius: 16px;
     color: rgb(155, 155, 155);
-    font-size: 14px;
-    font-weight: 500;
-    line-height: 20px;
     padding: 16px;
+    padding-top: 24px;
     position: relative;
 
+    width: 100%;
     max-width: 100%;
 }
 
@@ -26,6 +25,8 @@
     flex-flow: row;
 
     margin-bottom: 10px;
+
+    width: 100%;
 }
 
 .input {
@@ -61,7 +62,7 @@
     display: flex;
     justify-content: flex-end;
 
-    font-size: 12px;
+    font-size: 14px;
     font-weight: 300;
     letter-spacing: 0.7px;
 

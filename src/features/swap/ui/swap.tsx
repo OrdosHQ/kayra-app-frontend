@@ -394,17 +394,23 @@ export const Swap: FC = () => {
         return '0';
     }, [result2, token2]);
 
+    const amount2 = useMemo(() => {
+        if (!amount1) return '';
+
+        return trade?.outputAmount.toSignificant(6);
+    }, [amount1, trade]);
+
     return (
         <div className={styles.container}>
             <div className={styles.form}>
                 <div className={styles.item}>
                     <TokenInput
+                        onMaxClick={() => {}}
                         value={amount1}
-                        onChange={amount1ChangeHandler}
                         token={token1}
-                        header={'You pay'}
                         balance={balance1}
                         placeholder="0"
+                        onChange={amount1ChangeHandler}
                     />
                 </div>
                 <div onClick={swapClickHandler} className={styles.swap}>
@@ -417,9 +423,9 @@ export const Swap: FC = () => {
                 </div>
                 <div className={styles.item}>
                     <TokenInput
-                        value={trade?.outputAmount.toSignificant(6)}
+                        onMaxClick={() => {}}
+                        value={amount2}
                         token={token2}
-                        header={'You receive'}
                         balance={balance2}
                         placeholder="0"
                         disabled
