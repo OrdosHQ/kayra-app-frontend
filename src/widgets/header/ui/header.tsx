@@ -12,7 +12,7 @@ export const Header: FC = () => {
 
     return (
         <div className={styles.container}>
-            <div>
+            <div style={{ width: '30%' }}>
                 <Image width={144} height={40} src="/logo.svg" alt="Aphotic" />
             </div>
 
@@ -29,7 +29,15 @@ export const Header: FC = () => {
                 </Link>
             </div>
 
-            <ConnectWalletButton />
+            <div
+                style={{
+                    width: '30%',
+                    display: 'flex',
+                    justifyContent: 'flex-end',
+                }}
+            >
+                <ConnectWalletButton />
+            </div>
         </div>
     );
 };
