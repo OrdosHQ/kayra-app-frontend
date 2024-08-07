@@ -12,6 +12,7 @@ import { NillionChainInfo } from './keplr.constants';
 import { api } from './keplr.api';
 import { Balances } from './keplr.types';
 import { Dec, DecUtils } from '@keplr-wallet/unit';
+import { captureException } from '@sentry/nextjs';
 // import { MsgSend } from '@/shared/cosmos/proto-types-gen/src/cosmos/bank/v1beta1/tx';
 
 const KeplrWalletContext = createContext({});
@@ -62,6 +63,8 @@ export const KeplrProvider: FC<PropsWithChildren> = ({ children }) => {
                 //     await keplr.ethereum.enable();
                 // }
             } catch (e) {
+                captureException(e);
+
                 if (e instanceof Error) {
                     console.log(e.message);
                 }

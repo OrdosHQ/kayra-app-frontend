@@ -50,6 +50,7 @@ import {
 } from '../api';
 import { useModalStore } from '@/entities/modal';
 import Image from 'next/image';
+import { captureException } from '@sentry/nextjs';
 
 nillion.default();
 
@@ -264,6 +265,8 @@ export const Swap: FC = () => {
                     executor_id: executorId,
                 });
             } catch (err) {
+                captureException(err);
+
                 console.log(err);
 
                 throw err;
@@ -332,6 +335,8 @@ export const Swap: FC = () => {
                 link: `https://sepolia.etherscan.io/tx/${response.settlement_result.tx_hash}`,
             });
         } catch (err) {
+            captureException(err);
+
             closeModal();
         }
     }, [

@@ -1,5 +1,6 @@
 import { config } from '@/shared/constants/nillion';
 import * as nillion from '@nillion/client-web';
+import { captureException } from '@sentry/nextjs';
 
 interface StoreSecrets {
     nillionClient: nillion.NillionClient;
@@ -68,6 +69,8 @@ export async function storeSecrets({
 
         return store_id;
     } catch (error) {
+        captureException(error);
+
         throw error;
     }
 }

@@ -20,6 +20,7 @@ import { sepolia } from 'wagmi/chains';
 import styles from './faucet.module.scss';
 import { useModalStore } from '@/entities/modal/model';
 import { Token } from '@/shared/types';
+import { captureException } from '@sentry/nextjs';
 
 export const Faucet: FC = () => {
     const [token1, setToken1] = useState(USDC);
@@ -87,6 +88,8 @@ export const Faucet: FC = () => {
                 status: 'success',
             });
         } catch (err) {
+            captureException(err);
+
             closeModal();
             console.log(err);
         }

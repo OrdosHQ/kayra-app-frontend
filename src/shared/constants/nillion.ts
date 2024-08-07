@@ -4,6 +4,7 @@ import { PaymentReceipt } from '@nillion/client-web';
 import { MsgPayFor, typeUrl } from '@nillion/client-web/proto';
 import { ChainInfo } from '@keplr-wallet/types';
 import { getKeplr, signerViaKeplr } from '../utils/keplr';
+import { captureException } from '@sentry/nextjs';
 
 export interface NillionEnvConfig {
     clusterId: string;
@@ -148,6 +149,8 @@ export async function payWithKeplrWallet(
                 tx: result.transactionHash,
             };
         } catch (error) {
+            captureException(error);
+
             return {
                 ...paymentResult,
                 error,

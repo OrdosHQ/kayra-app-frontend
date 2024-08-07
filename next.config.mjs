@@ -1,5 +1,7 @@
 // @ts-check
 
+import { withSentryConfig } from '@sentry/nextjs';
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
     reactStrictMode: true,
@@ -48,4 +50,12 @@ const nextConfig = {
     },
 };
 
-export default nextConfig;
+export default withSentryConfig(nextConfig, {
+    org: 'kayra-52',
+    project: 'kayra-frontend',
+
+    // An auth token is required for uploading source maps.
+    authToken: process.env.SENTRY_AUTH_TOKEN,
+
+    silent: false,
+});

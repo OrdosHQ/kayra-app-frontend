@@ -7,9 +7,10 @@ import Image from 'next/image';
 import { getKeplr, shortAddress, signerViaKeplr } from '@/shared/utils';
 import { useAsyncInitialize } from '@/shared/hooks';
 import { config } from '@/shared/constants/nillion';
+import { useModalStore } from '@/entities/modal';
+import { captureException } from '@sentry/nextjs';
 
 import styles from './connect-wallet-button.module.scss';
-import { useModalStore } from '@/entities/modal';
 
 export const ConnectWalletButton: FC = () => {
     const { connect } = useConnect();
@@ -25,7 +26,8 @@ export const ConnectWalletButton: FC = () => {
             const account = await wallet.getAccounts();
 
             return account[0].address;
-        } catch {
+        } catch (err) {
+            captureException(err);
             return null;
         }
     }, [keplr]);
