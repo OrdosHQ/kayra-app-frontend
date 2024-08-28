@@ -1,6 +1,6 @@
 'use client';
 import { FC, useCallback, useMemo, useState } from 'react';
-import { Button, TokenInput } from '@/shared/ui';
+import { Button, TokenInput, TokenLogo } from '@/shared/ui';
 import {
     USDC,
     USDT,
@@ -51,6 +51,7 @@ import {
 import { useModalStore } from '@/entities/modal';
 import Image from 'next/image';
 import { captureException } from '@sentry/nextjs';
+import { useConnectWallet } from '@/features/connect-wallet';
 
 nillion.default();
 
@@ -86,11 +87,11 @@ export const Swap: FC = () => {
 
     const amount1ChangeHandler = useCallback(
         (e: React.ChangeEvent<HTMLInputElement>) => {
-            // if (!e.target.value) setAmount1('');
+            if (!e.target.value.length) setAmount1('');
 
-            // if (Number(e.target.value)) {
-            setAmount1(e.target.value);
-            // }
+            if (!isNaN(Number(e.target.value))) {
+                setAmount1(e.target.value);
+            }
         },
         [],
     );
@@ -140,17 +141,21 @@ export const Swap: FC = () => {
         return trade;
     }, [pair, amount1, tokenA, tokenB]);
 
-    const price = useMemo(() => {
+    const priceContent = useMemo(() => {
         if (!trade) return null;
 
-        return `1 ${tokenA.symbol} = ${trade.executionPrice.toSignificant(6)} ${
-            tokenB.symbol
-        }`;
+        return (
+            <>
+                <TokenLogo size="s" src={token1.logoURI} /> 1 {tokenA.symbol} =
+                <TokenLogo size="s" src={token2.logoURI} />
+                {trade.executionPrice.toSignificant(6)} {tokenB.symbol}
+            </>
+        );
     }, [trade, tokenA, tokenB]);
 
+    const config = useConfig();
     const { address } = useAccount();
     const { sendTransactionAsync } = useSendTransaction();
-    const config = useConfig();
     const { showModal, closeModal, updateModalState } = useModalStore();
 
     const swapClickHandler = useCallback(() => {
@@ -190,6 +195,7 @@ export const Swap: FC = () => {
                     nillion.NadaValue.new_secret_integer(
                         BigInt(address).toString(),
                     );
+
                 const secretReceiverAddressName = 'address';
 
                 secretForQuote.insert(
@@ -200,6 +206,7 @@ export const Swap: FC = () => {
                 const secretSalt = nillion.NadaValue.new_secret_integer(
                     BigInt(salt).toString(),
                 );
+
                 const secretSaltName = 'salt';
 
                 secretForQuote.insert(secretSaltName, secretSalt);
@@ -275,6 +282,36 @@ export const Swap: FC = () => {
         [amount1, token1, token2, trade],
     );
 
+    const result1 = useReadContract({
+        abi: erc20ABI,
+        address: token1.sepoliaAddress as `0x${string}`,
+        functionName: 'balanceOf',
+        args: [address],
+    });
+
+    const balance1 = useMemo(() => {
+        if (result1.data) {
+            return formatUnits(result1.data.toString(), token1.decimals);
+        }
+
+        return '0';
+    }, [result1, token1]);
+
+    const result2 = useReadContract({
+        abi: erc20ABI,
+        address: token2.sepoliaAddress as `0x${string}`,
+        functionName: 'balanceOf',
+        args: [address],
+    });
+
+    const balance2 = useMemo(() => {
+        if (result2.data) {
+            return formatUnits(result2.data.toString(), token2.decimals);
+        }
+
+        return '0';
+    }, [result2, token2]);
+
     const submitClickHandler = useCallback(async () => {
         try {
             showModal({
@@ -338,6 +375,9 @@ export const Swap: FC = () => {
             captureException(err);
 
             closeModal();
+        } finally {
+            result1.refetch();
+            result2.refetch();
         }
     }, [
         config,
@@ -353,7 +393,25 @@ export const Swap: FC = () => {
         sendTransactionAsync,
     ]);
 
+    const { connected, connectClickHandler } = useConnectWallet();
+
     const button = useMemo(() => {
+        if (!connected) {
+            return (
+                <Button fill onClick={connectClickHandler}>
+                    Connect Wallet
+                </Button>
+            );
+        }
+
+        if (Number(balance1) < Number(amount1)) {
+            return (
+                <Button disabled fill onClick={submitClickHandler}>
+                    Not enough balance
+                </Button>
+            );
+        }
+
         if (trade) {
             return (
                 <Button fill onClick={submitClickHandler}>
@@ -367,50 +425,25 @@ export const Swap: FC = () => {
                 Swap
             </Button>
         );
-    }, [trade, submitClickHandler]);
-
-    const result1 = useReadContract({
-        abi: erc20ABI,
-        address: token1.sepoliaAddress as `0x${string}`,
-        functionName: 'balanceOf',
-        args: [address],
-    });
-
-    const balance1 = useMemo(() => {
-        if (result1.data) {
-            return formatUnits(result1.data.toString(), token1.decimals);
-        }
-
-        return '0';
-    }, [result1, token1]);
-
-    const result2 = useReadContract({
-        abi: erc20ABI,
-        address: token2.sepoliaAddress as `0x${string}`,
-        functionName: 'balanceOf',
-        args: [address],
-    });
-
-    const balance2 = useMemo(() => {
-        if (result2.data) {
-            return formatUnits(result2.data.toString(), token2.decimals);
-        }
-
-        return '0';
-    }, [result2, token2]);
+    }, [connected, trade, submitClickHandler, connectClickHandler]);
 
     const amount2 = useMemo(() => {
-        if (!amount1) return '';
+        if (!Number(amount1)) return '';
 
         return trade?.outputAmount.toSignificant(6);
     }, [amount1, trade]);
+
+    const maxClickHandler = useCallback(() => {
+        setAmount1(balance1);
+    }, [balance1]);
 
     return (
         <div className={styles.container}>
             <div className={styles.form}>
                 <div className={styles.item}>
                     <TokenInput
-                        onMaxClick={() => {}}
+                        maxLength={18}
+                        onMaxClick={maxClickHandler}
                         value={amount1}
                         token={token1}
                         balance={balance1}
@@ -428,7 +461,6 @@ export const Swap: FC = () => {
                 </div>
                 <div className={styles.item}>
                     <TokenInput
-                        onMaxClick={() => {}}
                         value={amount2}
                         token={token2}
                         balance={balance2}
@@ -438,9 +470,9 @@ export const Swap: FC = () => {
                 </div>
             </div>
 
-            <div className={styles.action}>{button}</div>
+            {priceContent && <div className={styles.price}>{priceContent}</div>}
 
-            {price && <div className={styles.price}>{price}</div>}
+            <div className={styles.action}>{button}</div>
         </div>
     );
 };

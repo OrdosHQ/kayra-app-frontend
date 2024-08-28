@@ -1,0 +1,19 @@
+
+.container {
+    width: 100%;
+    max-width: 100%;
+
+    background-color: var(--container);
+
+    border-radius: 16px;
+    padding: 16px;
+}
+
+.title {
+    font-size: 18px;
+    font-weight: 500;
+
+    color: rgb(255, 255, 255);
+
+    margin-bottom: 10px;
+}

@@ -4,6 +4,7 @@ import { uniswapV2PoolABI } from './uniswapV2PoolAbi';
 import { factoryABI } from './factoryAbi';
 import { erc20ABI } from './erc20Abi';
 import { faucetABI } from './faucetAbi';
+export { inter } from './font';
 
 export const graphqlURL =
     'https://api.thegraph.com/subgraphs/name/uniswap/uniswap-v3';

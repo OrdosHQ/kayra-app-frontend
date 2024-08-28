@@ -6,10 +6,10 @@ import { SentryProvider } from './sentry';
 
 export const Providers: FC<PropsWithChildren> = ({ children }) => {
     return (
-        <WagmiProvider>
-            <QueryClientProvider>
+        <QueryClientProvider>
+            <WagmiProvider>
                 <SentryProvider>{children}</SentryProvider>
-            </QueryClientProvider>
-        </WagmiProvider>
+            </WagmiProvider>
+        </QueryClientProvider>
     );
 };

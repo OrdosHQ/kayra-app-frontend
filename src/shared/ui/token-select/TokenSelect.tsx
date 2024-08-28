@@ -1,10 +1,9 @@
-import { FC, useCallback } from 'react';
+import { FC } from 'react';
 import { TokenLogo } from '../token-logo';
 import { Token } from '@/shared/types';
+import { Address } from '../address';
 
 import styles from './TokenSelect.module.scss';
-import { shortAddress } from '@/shared/utils';
-import { Address } from '../address';
 
 interface TokenSelectProps {
     token?: Token;
@@ -38,7 +37,7 @@ export const TokenSelect: FC<TokenSelectProps> = ({
                                 {token?.symbol}
                             </div>
                             <div className={styles.infoAddress}>
-                                <Address address={token.address} />
+                                <Address address={token.sepoliaAddress} />
                             </div>
                         </div>
                     </div>

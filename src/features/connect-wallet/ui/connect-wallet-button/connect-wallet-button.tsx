@@ -32,8 +32,6 @@ export const ConnectWalletButton: FC = () => {
         }
     }, [keplr]);
 
-    console.log(keplrAddress);
-
     const connectClickHandler = useCallback(() => {
         connect({ connector: metaMask() });
     }, [connect]);

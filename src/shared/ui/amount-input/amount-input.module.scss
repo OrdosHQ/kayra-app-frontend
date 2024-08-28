@@ -8,6 +8,7 @@
 
 .textfit {
     width: 100%;
+    font-weight: 300;
 
     & > div {
         width: 100%;
@@ -30,7 +31,8 @@
     padding: 0px;
     text-align: left;
     font-size: inherit;
-
+    font-weight: 300;
+    
     &::placeholder {
         color: rgb(155, 155, 155);
     }

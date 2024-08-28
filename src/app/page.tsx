@@ -1,5 +1,6 @@
 'use client';
 import dynamic from 'next/dynamic';
+import { Orders } from '@/entities/orders';
 
 const Chart = dynamic(async () => (await import('@/entities/chart')).Chart, {
     ssr: false,
@@ -20,7 +21,11 @@ export default function Home() {
         <>
             <div className={styles.container}>
                 <div className={styles.chart}>
+                    {/* <div style={{ marginBottom: 10, height: '100%' }}> */}
                     <Chart />
+                    {/* </div> */}
+
+                    {/* <Orders /> */}
                 </div>
                 <div className={styles.form}>
                     <div className={styles.switch}>

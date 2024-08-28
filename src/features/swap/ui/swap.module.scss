@@ -45,8 +45,26 @@
 }
 
 .price {
-    padding: 10px;
-    padding-left: 16px;
+    width: 100%;
+    max-width: 100%;
+
+    background-color: var(--container);
+
+    border-radius: 16px;
+    padding: 16px;
+
+    display: flex;
+    align-items: center;
 
     color: #fff;
+
+    margin-bottom: 10px;
+
+    & img {
+        margin-right: 4px;
+
+        &:last-child {
+            margin-left: 4px;
+        }
+    }
 }

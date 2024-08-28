@@ -7,6 +7,6 @@ export const initializeNillionClient = (
 ): nillion.NillionClient => {
     const seed = generateSalt();
     const nodeKey = nillion.NodeKey.from_seed(seed);
-    console.log(nodeKey, 'nodeKey');
+
     return new nillion.NillionClient(userKey, nodeKey, config.bootnodes);
 };

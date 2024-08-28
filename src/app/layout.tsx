@@ -1,12 +1,10 @@
 import type { Metadata } from 'next';
-import { Inter } from 'next/font/google';
 import { Providers } from '@/providers';
 import { Modal } from '@/entities/modal';
 import { Header } from '@/widgets/header';
+import { inter } from '@/shared/constants';
 
 import './globals.css';
-
-const inter = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
     title: 'Kayra',
