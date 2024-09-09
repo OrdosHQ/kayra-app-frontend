@@ -6,13 +6,17 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "postinstall": "patch-package"
   },
   "dependencies": {
     "@cosmjs/proto-signing": "^0.32.4",
     "@cosmjs/stargate": "^0.32.4",
     "@keplr-wallet/types": "^0.12.107",
     "@keplr-wallet/unit": "^0.12.107",
+    "@nillion/client-core": "^0.1.0-rc.16",
+    "@nillion/client-react-hooks": "^0.1.0-rc.16",
+    "@nillion/client-vms": "^0.1.0-rc.16",
     "@nillion/client-web": "^0.6.0",
     "@sentry/nextjs": "^8.24.0",
     "@tanstack/react-query": "^5.40.1",
@@ -31,10 +35,7 @@
     "sass": "^1.77.4",
     "trading-view": "./trading-view",
     "wagmi": "^2.9.11",
-    "zustand": "^4.5.2",
-    "@nillion/client-core": "^0.1.0-rc.16",
-    "@nillion/client-react-hooks": "^0.1.0-rc.16",
-    "@nillion/client-vms": "^0.1.0-rc.16"
+    "zustand": "^4.5.2"
   },
   "devDependencies": {
     "@types/node": "^20",
@@ -42,6 +43,7 @@
     "@types/react-dom": "^18",
     "eslint": "^8",
     "eslint-config-next": "14.2.3",
+    "patch-package": "^8.0.0",
     "typescript": "^5"
   }
 }
