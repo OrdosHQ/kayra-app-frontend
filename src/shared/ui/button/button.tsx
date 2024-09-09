@@ -8,7 +8,7 @@ interface IButtonProps
         HTMLButtonElement
     > {
     view?: 'primary';
-    size?: 'm' | 's';
+    size?: 'm' | 's' | 'xs';
     fill?: boolean;
 }
 

@@ -10,7 +10,7 @@ const Switch = dynamic(async () => (await import('@/shared/ui')).Switch, {
     ssr: false,
 });
 
-const Swap = dynamic(async () => (await import('@/features/swap')).Swap, {
+const Swap = dynamic(async () => (await import('@/features/new-swap')).Swap, {
     ssr: false,
 });
 
@@ -21,11 +21,11 @@ export default function Home() {
         <>
             <div className={styles.container}>
                 <div className={styles.chart}>
-                    {/* <div style={{ marginBottom: 10, height: '100%' }}> */}
-                    <Chart />
-                    {/* </div> */}
+                    <div style={{ marginBottom: 10, height: '100%' }}>
+                        <Chart />
+                    </div>
 
-                    {/* <Orders /> */}
+                    <Orders />
                 </div>
                 <div className={styles.form}>
                     <div className={styles.switch}>

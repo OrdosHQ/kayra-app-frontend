@@ -6,6 +6,7 @@ interface IShowModalPayload {
     modalState: any;
     modalType: string;
 }
+
 interface ModalState {
     modalType: null | string;
     state: any;

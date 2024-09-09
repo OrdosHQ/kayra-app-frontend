@@ -23,7 +23,6 @@ const nextConfig = {
             {
                 source: '/:path*',
                 headers: [
-                    { key: 'timur', value: 'gandon' },
                     {
                         key: 'Cross-Origin-Embedder-Policy',
                         value: 'require-corp',
