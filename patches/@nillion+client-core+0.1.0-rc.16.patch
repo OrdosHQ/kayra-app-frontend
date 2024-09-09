@@ -1,0 +1,41 @@
+diff --git a/node_modules/@nillion/client-core/src/nada/program.ts b/node_modules/@nillion/client-core/src/nada/program.ts
+index 383799e..2fff5f4 100644
+--- a/node_modules/@nillion/client-core/src/nada/program.ts
++++ b/node_modules/@nillion/client-core/src/nada/program.ts
+@@ -32,15 +32,14 @@ export class ProgramBindings {
+     if (this.inputs.size === 0 && this.outputs.size === 0) {
+       Log("program has no inputs our outputs");
+     }
+-
+     const program = new Wasm.ProgramBindings(this.id);
+-    for (const [name, id] of this.inputs) {
++    this.inputs.forEach((id, name) => {
+       program.add_input_party(name, id);
+-    }
++    });
+ 
+-    for (const [name, id] of this.outputs) {
++    this.outputs.forEach((id, name) => {
+       program.add_output_party(name, id);
+-    }
++    });
+ 
+     return program;
+   }
+diff --git a/node_modules/@nillion/client-core/src/nada/values.ts b/node_modules/@nillion/client-core/src/nada/values.ts
+index 201c531..b2394e2 100644
+--- a/node_modules/@nillion/client-core/src/nada/values.ts
++++ b/node_modules/@nillion/client-core/src/nada/values.ts
+@@ -31,10 +31,10 @@ export class NadaValues implements IntoWasm<Wasm.NadaValues> {
+ 
+   into(): Wasm.NadaValues {
+     const wasmValues = new Wasm.NadaValues();
+-    for (const [key, value] of this.values) {
++    this.values.forEach((value, key) => {
+       const wasmValue = value.toWasm();
+       wasmValues.insert(key, wasmValue);
+-    }
++    });
+     return wasmValues;
+   }
+ 

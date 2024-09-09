@@ -200,8 +200,8 @@ export const Swap: FC = () => {
 
                 if (!isLoggedIn) return null;
 
-                // const backendParameters = await fetchBackendParameters();
-                // const executorId = await fetchExecutorId();
+                const backendParameters = await fetchBackendParameters();
+                const executorId = await fetchExecutorId();
 
                 const nadaValues = NadaValues.create();
 
@@ -246,25 +246,25 @@ export const Swap: FC = () => {
 
                 const acl = StoreAcl.create();
 
-                // const executorUserId = UserId.parse(executorId);
-                // const programId = ProgramId.parse(backendParameters.program_id);
+                const executorUserId = UserId.parse(executorId);
+                const programId = ProgramId.parse(backendParameters.program_id);
 
-                // acl.allowRetrieve(executorUserId);
-                // acl.allowUpdate(executorUserId);
-                // acl.allowDelete(executorUserId);
-                // acl.allowCompute([], programId);
+                acl.allowRetrieve(executorUserId);
+                acl.allowUpdate(executorUserId);
+                acl.allowDelete(executorUserId);
+                acl.allowCompute([], programId);
 
                 const storeId = await nilClient.client.storeValues({
                     values: nadaValues,
                     ttl: 1 as any,
                     acl,
                 });
-                console.log(storeId, 'storeId');
-                // return await fetchBackendCompute({
-                //     store_id: storeId,
-                //     party_id: nilClient.client.partyId,
-                //     executor_id: executorId,
-                // });
+
+                return await fetchBackendCompute({
+                    store_id: storeId.ok,
+                    party_id: nilClient.client.partyId,
+                    executor_id: executorId,
+                });
             } catch (err) {
                 captureException(err);
 

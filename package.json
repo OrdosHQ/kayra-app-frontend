@@ -31,12 +31,12 @@
     "sass": "^1.77.4",
     "trading-view": "./trading-view",
     "wagmi": "^2.9.11",
-    "zustand": "^4.5.2"
-  },
-  "devDependencies": {
+    "zustand": "^4.5.2",
     "@nillion/client-core": "^0.1.0-rc.16",
     "@nillion/client-react-hooks": "^0.1.0-rc.16",
-    "@nillion/client-vms": "^0.1.0-rc.16",
+    "@nillion/client-vms": "^0.1.0-rc.16"
+  },
+  "devDependencies": {
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",
