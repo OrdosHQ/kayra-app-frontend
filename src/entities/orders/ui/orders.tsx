@@ -14,16 +14,26 @@ export const Orders: FC = () => {
 
     return (
         <div className={styles.container}>
-            <div className={styles.header}>
+            {/* <div className={styles.header}>
                 <div className={styles.title}>Orders</div>
-            </div>
+            </div> */}
 
             <div className={styles.content}>
-                <div className={styles.orders}>
-                    {orders.map((order) => (
-                        <Order key={order.salt} {...order} />
-                    ))}
-                </div>
+                <table className={styles.orders}>
+                    <thead>
+                        <tr>
+                            <th>Order Time</th>
+                            <th>Type</th>
+                            <th>Amount</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {orders.map((order) => (
+                            <Order key={order.salt} {...order} />
+                        ))}
+                    </tbody>
+                </table>
             </div>
         </div>
     );
@@ -95,51 +105,65 @@ const Order: FC<IOrder> = ({
     ]);
 
     return (
-        <div key={salt} className={styles.order}>
-            <div className={styles.time}>
-                {moment.unix(timestamp).fromNow()}
-            </div>
-
-            <div className={styles.type}>
-                <span>Swap</span>
-                <div className={styles.token}>
-                    <TokenLogo size="xs" src={token1.logoURI} />
-
-                    <div className={styles.tokenSymbol}>{token1.symbol}</div>
+        <tr key={salt} className={styles.order}>
+            <td>
+                <div className={styles.time}>
+                    {moment.unix(timestamp).fromNow()}
                 </div>
-                for
-                <div className={styles.token}>
-                    <TokenLogo size="xs" src={token2.logoURI} />
+            </td>
 
-                    <div className={styles.tokenSymbol}>{token2.symbol}</div>
+            <td>
+                <div className={styles.type}>
+                    <span>Swap</span>
+                    <div className={styles.token}>
+                        <TokenLogo size="xs" src={token1.logoURI} />
+
+                        <div className={styles.tokenSymbol}>
+                            {token1.symbol}
+                        </div>
+                    </div>
+                    for
+                    <div className={styles.token}>
+                        <TokenLogo size="xs" src={token2.logoURI} />
+
+                        <div className={styles.tokenSymbol}>
+                            {token2.symbol}
+                        </div>
+                    </div>
                 </div>
-            </div>
+            </td>
 
-            <div className={styles.amount}>
-                {amount1}
-                <div className={styles.token}>
-                    <TokenLogo size="xs" src={token1.logoURI} />
+            <td>
+                <div className={styles.amount}>
+                    {amount1}
+                    <div className={styles.token}>
+                        <TokenLogo size="xs" src={token1.logoURI} />
 
-                    <div className={styles.tokenSymbol}>{token1.symbol}</div>
+                        <div className={styles.tokenSymbol}>
+                            {token1.symbol}
+                        </div>
+                    </div>
                 </div>
-            </div>
+            </td>
 
-            <div className={styles.amount}>
+            {/* <div className={styles.amount}>
                 {amount2}
                 <div className={styles.token}>
                     <TokenLogo size="xs" src={token2.logoURI} />
 
                     <div className={styles.tokenSymbol}>{token2.symbol}</div>
                 </div>
-            </div>
+            </div> */}
 
-            <div className={styles.actions}>
-                {status === 'in progress' ? (
-                    <Button onClick={cancelOrder} size="xs">
-                        Cancel
-                    </Button>
-                ) : null}
-            </div>
-        </div>
+            <td>
+                <div className={styles.actions}>
+                    {status === 'in progress' ? (
+                        <Button onClick={cancelOrder} size="xs">
+                            Cancel
+                        </Button>
+                    ) : null}
+                </div>
+            </td>
+        </tr>
     );
 };

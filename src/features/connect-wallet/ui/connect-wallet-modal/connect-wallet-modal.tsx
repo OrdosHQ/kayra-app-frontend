@@ -1,24 +1,23 @@
 import { FC, useCallback } from 'react';
-import Image from 'next/image';
 import { useConnect } from 'wagmi';
-import { metaMask } from 'wagmi/connectors';
+import { useModalStore } from '@/entities/modal';
+import { getKeplr } from '@/shared/utils';
+import { config } from '@/shared/constants/nillion';
+import Image from 'next/image';
 
 import styles from './connect-wallet-modal.module.scss';
-import { useModalStore } from '@/entities/modal';
-import { getKeplr, signerViaKeplr } from '@/shared/utils';
-import { config } from '@/shared/constants/nillion';
 
 export const ConnectWalletModal: FC = () => {
     const closeModal = useModalStore((store) => store.closeModal);
-    const { connectAsync } = useConnect();
+    const { connectAsync, connectors } = useConnect();
 
     const connectMetaMaskClickHandler = useCallback(async () => {
         try {
-            await connectAsync({ connector: metaMask() });
+            await connectAsync({ connector: connectors[0] });
         } finally {
             closeModal();
         }
-    }, [connectAsync, closeModal]);
+    }, [connectAsync, closeModal, connectors]);
 
     const connectKeplrWallet = useCallback(async () => {
         try {

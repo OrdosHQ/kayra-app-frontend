@@ -1,17 +1,16 @@
 import { useCallback, useMemo } from 'react';
 import { useAccount, useConnect } from 'wagmi';
-import { metaMask } from 'wagmi/connectors';
 
 export const useConnectWallet = () => {
-    const { connectAsync } = useConnect();
+    const { connectAsync, connectors } = useConnect();
     const { isConnected: connected } = useAccount();
 
     const connectClickHandler = useCallback(async () => {
         try {
-            await connectAsync({ connector: metaMask() });
+            await connectAsync({ connector: connectors[0] });
         } finally {
         }
-    }, [connectAsync]);
+    }, [connectAsync, connectors]);
 
     return useMemo(
         () => ({

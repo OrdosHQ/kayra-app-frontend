@@ -8,7 +8,7 @@ import {
     useSwitchChain,
 } from 'wagmi';
 import { sepolia } from 'wagmi/chains';
-import { metaMask } from '@wagmi/connectors';
+import { metaMask } from 'wagmi/connectors';
 
 const config = createConfig({
     chains: [sepolia],
@@ -27,7 +27,7 @@ const ConnectionHandler = () => {
             if (chainId !== sepolia.id) {
                 switchChainAsync({
                     chainId: sepolia.id,
-                }).catch(() => {});
+                }).catch((err) => console.log(err));
             }
         }
     }, [isConnected, chainId]);
@@ -38,7 +38,7 @@ const ConnectionHandler = () => {
 export const WagmiProvider: FC<PropsWithChildren> = ({ children }) => {
     return (
         <LWagmiProvider config={config}>
-            <ConnectionHandler />
+            {/* <ConnectionHandler /> */}
             {children}
         </LWagmiProvider>
     );

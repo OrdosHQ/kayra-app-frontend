@@ -252,7 +252,7 @@ export const Swap: FC = () => {
                 acl.allowRetrieve(executorUserId);
                 acl.allowUpdate(executorUserId);
                 acl.allowDelete(executorUserId);
-                acl.allowCompute([], programId);
+                acl.allowCompute(executorUserId, programId);
 
                 const storeId = await nilClient.client.storeValues({
                     values: nadaValues,
@@ -309,6 +309,9 @@ export const Swap: FC = () => {
     const { addOrder } = useOrdersStore();
 
     const submitClickHandler = useCallback(async () => {
+        const salt = generateSalt();
+        let depositAddress = '' as `0x${string}`;
+
         try {
             showModal({
                 modalType: 'transactionLoader',
@@ -321,16 +324,15 @@ export const Swap: FC = () => {
                     title: 'Swap',
                 },
             });
-            const salt = generateSalt();
 
-            const data = await readContract(config, {
+            depositAddress = (await readContract(config, {
                 address: '0x6D2762dD27C439E1D74B53F89DbB3DEc51f14795',
                 functionName: 'computeOrderWalletAddress',
                 args: [salt, address],
                 abi: factoryABI,
-            });
+            })) as `0x${string}`;
 
-            if (!data) return null;
+            if (!depositAddress) return null;
 
             let amount: any = null;
 
@@ -357,22 +359,8 @@ export const Swap: FC = () => {
                 abi: erc20ABI,
                 address: token1.sepoliaAddress as `0x${string}`,
                 functionName: 'transfer',
-                args: [data, amount],
+                args: [depositAddress, amount],
             });
-
-            const order = {
-                salt,
-                token1,
-                token2,
-                amount1: amount1,
-                amount2: trade?.outputAmount.toSignificant(6) ?? '0',
-                address: address as any,
-                depositAddress: data as any,
-                timestamp: moment().unix(),
-                storeId: '',
-            };
-
-            addOrder(order);
 
             const response = await nillionExecute(
                 address!,
@@ -393,6 +381,20 @@ export const Swap: FC = () => {
             });
         } catch (err) {
             captureException(err);
+
+            const order = {
+                salt,
+                token1,
+                token2,
+                amount1: amount1,
+                amount2: trade?.outputAmount.toSignificant(6) ?? '0',
+                address: address as any,
+                depositAddress: depositAddress,
+                timestamp: moment().unix(),
+                storeId: '',
+            };
+
+            addOrder(order);
 
             closeModal();
         } finally {
