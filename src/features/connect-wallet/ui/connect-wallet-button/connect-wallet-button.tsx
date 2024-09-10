@@ -6,7 +6,7 @@ import { Button } from '@/shared/ui';
 import Image from 'next/image';
 import { getKeplr, shortAddress, signerViaKeplr } from '@/shared/utils';
 import { useAsyncInitialize } from '@/shared/hooks';
-import { config } from '@/shared/constants/nillion';
+import { oldConfig } from '@/shared/constants/nillion';
 import { useModalStore } from '@/entities/modal';
 import { captureException } from '@sentry/nextjs';
 
@@ -21,7 +21,7 @@ export const ConnectWalletButton: FC = () => {
         try {
             if (!keplr) return null;
 
-            const wallet = await signerViaKeplr(config.chain.chainId, keplr);
+            const wallet = await signerViaKeplr(oldConfig.chain.chainId, keplr);
 
             const account = await wallet.getAccounts();
 

@@ -1,4 +1,4 @@
-import { config } from '@/shared/constants/nillion';
+import { oldConfig } from '@/shared/constants/nillion';
 import * as nillion from '@nillion/client-web';
 import { captureException } from '@sentry/nextjs';
 
@@ -61,7 +61,7 @@ export async function storeSecrets({
         }
 
         const store_id = await nillionClient.store_values(
-            config.clusterId,
+            oldConfig.clusterId,
             nillionSecrets,
             permissions,
             storeSecretsReceipt,

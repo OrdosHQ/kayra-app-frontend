@@ -1,4 +1,4 @@
-import { config } from '@/shared/constants/nillion';
+import { oldConfig } from '@/shared/constants/nillion';
 import { Window as KeplrWindow, Keplr } from '@keplr-wallet/types';
 
 declare global {
@@ -34,10 +34,12 @@ export async function getKeplr(): Promise<Keplr | undefined> {
 
 export async function signerViaKeplr(chainId: string, keplr: Keplr) {
     return await keplr
-        .experimentalSuggestChain(config.chain.chainInfo)
+        .experimentalSuggestChain(oldConfig.chain.chainInfo)
         .then(async () => {
-            await keplr.enable(config.chain.chainId);
-            const signer = await keplr.getOfflineSigner(config.chain.chainId);
+            await keplr.enable(oldConfig.chain.chainId);
+            const signer = await keplr.getOfflineSigner(
+                oldConfig.chain.chainId,
+            );
             return signer;
         });
 }

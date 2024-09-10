@@ -6,76 +6,76 @@ import { ChainInfo } from '@keplr-wallet/types';
 import { getKeplr, signerViaKeplr } from '../utils/keplr';
 import { captureException } from '@sentry/nextjs';
 
-// export interface NillionEnvConfig {
-//     clusterId: string;
-//     bootnodes: string[];
-//     chain: {
-//         chainId: string;
-//         endpoint: string;
-//         keys: string[];
-//         chainInfo: ChainInfo;
-//     };
-// }
+export interface NillionEnvConfig {
+    clusterId: string;
+    bootnodes: string[];
+    chain: {
+        chainId: string;
+        endpoint: string;
+        keys: string[];
+        chainInfo: ChainInfo;
+    };
+}
 
-// export const config: NillionEnvConfig = {
-//     clusterId: process.env.NEXT_PUBLIC_NILLION_CLUSTER_ID || '',
-//     bootnodes: [process.env.NEXT_PUBLIC_NILLION_BOOTNODE_WEBSOCKET || ''],
-//     chain: {
-//         chainId: process.env.NEXT_PUBLIC_NILLION_NILCHAIN_CHAIN_ID || '',
-//         endpoint: process.env.NEXT_PUBLIC_NILLION_NILCHAIN_JSON_RPC || '', // see webpack.config.js proxy
-//         keys: [process.env.NEXT_PUBLIC_NILLION_NILCHAIN_PRIVATE_KEY || ''],
-//         chainInfo: {
-//             rpc: process.env.NEXT_PUBLIC_NILLION_NILCHAIN_JSON_RPC || '',
-//             rest: 'https://nillion-testnet-api.polkachu.com',
-//             chainId: process.env.NEXT_PUBLIC_NILLION_NILCHAIN_CHAIN_ID || '',
-//             chainName: process.env.NEXT_PUBLIC_NILLION_NILCHAIN_CHAIN_ID || '',
-//             chainSymbolImageUrl:
-//                 'https://raw.githubusercontent.com/chainapsis/keplr-chain-registry/main/images/nillion-chain-testnet/nil.png',
-//             stakeCurrency: {
-//                 coinDenom: 'NIL',
-//                 coinMinimalDenom: 'unil',
-//                 coinDecimals: 6,
-//                 coinImageUrl:
-//                     'https://raw.githubusercontent.com/chainapsis/keplr-chain-registry/main/images/nillion-chain-testnet/nil.png',
-//             },
-//             bip44: {
-//                 coinType: 118,
-//             },
-//             bech32Config: {
-//                 bech32PrefixAccAddr: 'nillion',
-//                 bech32PrefixAccPub: 'nillionpub',
-//                 bech32PrefixValAddr: 'nillionvaloper',
-//                 bech32PrefixValPub: 'nillionvaloperpub',
-//                 bech32PrefixConsAddr: 'nillionvalcons',
-//                 bech32PrefixConsPub: 'nillionvalconspub',
-//             },
-//             currencies: [
-//                 {
-//                     coinDenom: 'NIL',
-//                     coinMinimalDenom: 'unil',
-//                     coinDecimals: 6,
-//                     coinImageUrl:
-//                         'https://raw.githubusercontent.com/chainapsis/keplr-chain-registry/main/images/nillion-chain-testnet/nil.png',
-//                 },
-//             ],
-//             feeCurrencies: [
-//                 {
-//                     coinDenom: 'NIL',
-//                     coinMinimalDenom: 'unil',
-//                     coinDecimals: 6,
-//                     coinImageUrl:
-//                         'https://raw.githubusercontent.com/chainapsis/keplr-chain-registry/main/images/nillion-chain-testnet/nil.png',
-//                     gasPriceStep: {
-//                         low: 0.001,
-//                         average: 0.001,
-//                         high: 0.01,
-//                     },
-//                 },
-//             ],
-//             features: [],
-//         },
-//     },
-// };
+export const oldConfig: NillionEnvConfig = {
+    clusterId: process.env.NEXT_PUBLIC_NILLION_CLUSTER_ID || '',
+    bootnodes: [process.env.NEXT_PUBLIC_NILLION_BOOTNODE_WEBSOCKET || ''],
+    chain: {
+        chainId: process.env.NEXT_PUBLIC_NILLION_NILCHAIN_CHAIN_ID || '',
+        endpoint: process.env.NEXT_PUBLIC_NILLION_NILCHAIN_JSON_RPC || '', // see webpack.config.js proxy
+        keys: [process.env.NEXT_PUBLIC_NILLION_NILCHAIN_PRIVATE_KEY || ''],
+        chainInfo: {
+            rpc: process.env.NEXT_PUBLIC_NILLION_NILCHAIN_JSON_RPC || '',
+            rest: 'https://nillion-testnet-api.polkachu.com',
+            chainId: process.env.NEXT_PUBLIC_NILLION_NILCHAIN_CHAIN_ID || '',
+            chainName: process.env.NEXT_PUBLIC_NILLION_NILCHAIN_CHAIN_ID || '',
+            chainSymbolImageUrl:
+                'https://raw.githubusercontent.com/chainapsis/keplr-chain-registry/main/images/nillion-chain-testnet/nil.png',
+            stakeCurrency: {
+                coinDenom: 'NIL',
+                coinMinimalDenom: 'unil',
+                coinDecimals: 6,
+                coinImageUrl:
+                    'https://raw.githubusercontent.com/chainapsis/keplr-chain-registry/main/images/nillion-chain-testnet/nil.png',
+            },
+            bip44: {
+                coinType: 118,
+            },
+            bech32Config: {
+                bech32PrefixAccAddr: 'nillion',
+                bech32PrefixAccPub: 'nillionpub',
+                bech32PrefixValAddr: 'nillionvaloper',
+                bech32PrefixValPub: 'nillionvaloperpub',
+                bech32PrefixConsAddr: 'nillionvalcons',
+                bech32PrefixConsPub: 'nillionvalconspub',
+            },
+            currencies: [
+                {
+                    coinDenom: 'NIL',
+                    coinMinimalDenom: 'unil',
+                    coinDecimals: 6,
+                    coinImageUrl:
+                        'https://raw.githubusercontent.com/chainapsis/keplr-chain-registry/main/images/nillion-chain-testnet/nil.png',
+                },
+            ],
+            feeCurrencies: [
+                {
+                    coinDenom: 'NIL',
+                    coinMinimalDenom: 'unil',
+                    coinDecimals: 6,
+                    coinImageUrl:
+                        'https://raw.githubusercontent.com/chainapsis/keplr-chain-registry/main/images/nillion-chain-testnet/nil.png',
+                    gasPriceStep: {
+                        low: 0.001,
+                        average: 0.001,
+                        high: 0.01,
+                    },
+                },
+            ],
+            features: [],
+        },
+    },
+};
 
 export const nillionConfig = {
     clusterId: process.env.NEXT_PUBLIC_NILLION_CLUSTER_ID || '',
@@ -94,7 +94,7 @@ export async function createNilChainClientAndKeplrWallet(): Promise<
         );
         throw new Error('Keplr extension not installed');
     }
-    const wallet = await signerViaKeplr(config.chain.chainId, keplr);
+    const wallet = await signerViaKeplr(oldConfig.chain.chainId, keplr);
 
     const registry = new Registry();
     registry.register(typeUrl, MsgPayFor);
@@ -105,7 +105,7 @@ export async function createNilChainClientAndKeplrWallet(): Promise<
     };
 
     const client = await SigningStargateClient.connectWithSigner(
-        config.chain.endpoint,
+        oldConfig.chain.endpoint,
         wallet,
         options,
     );

@@ -2,7 +2,7 @@ import { FC, useCallback } from 'react';
 import { useConnect } from 'wagmi';
 import { useModalStore } from '@/entities/modal';
 import { getKeplr } from '@/shared/utils';
-import { config } from '@/shared/constants/nillion';
+import { oldConfig } from '@/shared/constants/nillion';
 import Image from 'next/image';
 
 import styles from './connect-wallet-modal.module.scss';
@@ -25,7 +25,7 @@ export const ConnectWalletModal: FC = () => {
 
             if (!keplr) return null;
 
-            await keplr.enable(config.chain.chainId);
+            await keplr.enable(oldConfig.chain.chainId);
         } finally {
             closeModal();
         }

@@ -30,19 +30,8 @@ import {
     waitForTransactionReceipt,
     writeContract,
 } from '@wagmi/core';
-import {
-    generateSalt,
-    getQuote,
-    getUserKey,
-    initializeNillionClient,
-} from '@/shared/utils';
-import * as nillion from '@nillion/client-web';
+import { generateSalt } from '@/shared/utils';
 import styles from './swap.module.scss';
-import { storeSecrets } from '@/shared/utils/nillion/storeSecrets';
-import {
-    createNilChainClientAndKeplrWallet,
-    payWithKeplrWallet,
-} from '@/shared/constants/nillion';
 import {
     fetchBackendCompute,
     fetchBackendParameters,
@@ -53,7 +42,6 @@ import Image from 'next/image';
 import { captureException } from '@sentry/nextjs';
 import { useConnectWallet } from '@/features/connect-wallet';
 import {
-    useNilCompute,
     useNillion,
     useNillionAuth,
     useNilStoreValue,
