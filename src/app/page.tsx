@@ -36,11 +36,11 @@ export default function Home() {
                                     value: 'swap',
                                     label: 'Swap',
                                 },
-                                {
-                                    value: 'limit',
-                                    label: 'Limit',
-                                    disabled: true,
-                                },
+                                // {
+                                //     value: 'limit',
+                                //     label: 'Limit',
+                                //     disabled: true,
+                                // },
                             ]}
                         />
                     </div>

@@ -7,7 +7,7 @@ interface IButtonProps
         React.ButtonHTMLAttributes<HTMLButtonElement>,
         HTMLButtonElement
     > {
-    view?: 'primary';
+    view?: 'primary' | 'secondary';
     size?: 'm' | 's' | 'xs';
     fill?: boolean;
 }

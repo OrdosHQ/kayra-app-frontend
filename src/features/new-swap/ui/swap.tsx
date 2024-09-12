@@ -21,6 +21,7 @@ import {
 import { useQuery } from '@tanstack/react-query';
 import {
     useAccount,
+    useChainId,
     useConfig,
     useReadContract,
     useSendTransaction,
@@ -299,6 +300,7 @@ export const Swap: FC = () => {
     const submitClickHandler = useCallback(async () => {
         const salt = generateSalt();
         let depositAddress = '' as `0x${string}`;
+        let depositTxHash: null | `0x${string}` = null;
 
         try {
             showModal({
@@ -323,27 +325,17 @@ export const Swap: FC = () => {
             if (!depositAddress) return null;
 
             let amount: any = null;
-
-            // if (token1.symbol === 'ETH') {
+            //     SENT NATIVE TOKEN
             //     amount = parseEther(amount1);
 
             //     await sendTransactionAsync({
             //         to: token1.address as `0x${string}`,
             //         value: amount,
             //     });
-            // } else {
-            //     amount = parseUnits(amount1, token1.decimals);
 
-            //     await writeContract(config, {
-            //         abi: erc20ABI,
-            //         address: token1.sepoliaAddress as `0x${string}`,
-            //         functionName: 'transfer',
-            //         args: [data, amount],
-            //     });
-            // }
             amount = parseUnits(amount1, token1.decimals);
 
-            await writeContract(config, {
+            depositTxHash = await writeContract(config, {
                 abi: erc20ABI,
                 address: token1.sepoliaAddress as `0x${string}`,
                 functionName: 'transfer',
@@ -370,19 +362,19 @@ export const Swap: FC = () => {
         } catch (err) {
             captureException(err);
 
-            const order = {
-                salt,
-                token1,
-                token2,
-                amount1: amount1,
-                amount2: trade?.outputAmount.toSignificant(6) ?? '0',
-                address: address as any,
-                depositAddress: depositAddress,
-                timestamp: moment().unix(),
-                storeId: '',
-            };
-
-            addOrder(order);
+            if (depositTxHash) {
+                addOrder({
+                    salt,
+                    token1,
+                    token2,
+                    amount1: amount1,
+                    amount2: trade?.outputAmount.toSignificant(6) ?? '0',
+                    address: address as any,
+                    depositAddress: depositAddress,
+                    timestamp: moment().unix(),
+                    storeId: '',
+                });
+            }
 
             closeModal();
         } finally {
@@ -405,8 +397,17 @@ export const Swap: FC = () => {
     ]);
 
     const { connected, connectClickHandler } = useConnectWallet();
+    const { chainId } = useAccount();
 
     const button = useMemo(() => {
+        if (chainId !== 11155111) {
+            return (
+                <Button fill disabled>
+                    Switch to Sepolia
+                </Button>
+            );
+        }
+
         if (!connected) {
             return (
                 <Button fill onClick={connectClickHandler}>
@@ -436,7 +437,7 @@ export const Swap: FC = () => {
                 Swap
             </Button>
         );
-    }, [connected, trade, submitClickHandler, connectClickHandler]);
+    }, [connected, trade, chainId, submitClickHandler, connectClickHandler]);
 
     const amount2 = useMemo(() => {
         if (!Number(amount1)) return '';

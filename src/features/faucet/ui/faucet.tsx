@@ -121,6 +121,24 @@ export const Faucet: FC = () => {
         });
     }, [showModal]);
 
+    const { chainId } = useAccount();
+
+    const buttonContent = useMemo(() => {
+        if (chainId !== 11155111) {
+            return (
+                <Button fill disabled>
+                    Switch to Sepolia
+                </Button>
+            );
+        }
+
+        return (
+            <Button onClick={submitClickHandler} fill>
+                Faucet
+            </Button>
+        );
+    }, [chainId]);
+
     return (
         <div className={styles.container}>
             <div className={styles.item}>
@@ -135,11 +153,7 @@ export const Faucet: FC = () => {
                 />
             </div>
 
-            <div className={styles.action}>
-                <Button onClick={submitClickHandler} fill>
-                    Faucet
-                </Button>
-            </div>
+            <div className={styles.action}>{buttonContent}</div>
         </div>
     );
 };

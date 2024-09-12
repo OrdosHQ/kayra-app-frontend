@@ -47,6 +47,25 @@
             outline: none;
         }
     }
+
+    &_secondary {
+        background-color: var(--container);
+        font-weight: 535;
+        color: rgb(255, 255, 255);
+
+        &:hover {
+            opacity: .8;
+        }
+        
+        &:disabled {
+            background-color: var(--background);
+            color: rgb(155, 155, 155);
+            cursor: auto;
+            box-shadow: none;
+            border: 1px solid transparent;
+            outline: none;
+        }
+    }
 }
 
 .size {

@@ -35,6 +35,16 @@
     }
 }
 
+.link {
+    margin-bottom: 10px;
+
+    & a {
+        font-size: 18px;
+        text-decoration: none;
+        color: var(--action);
+    }
+}
+
 .footer {
     width: 100%;
     

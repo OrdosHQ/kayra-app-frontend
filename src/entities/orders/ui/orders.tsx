@@ -4,10 +4,11 @@ import { Order as IOrder, useOrdersStore } from '../model';
 import moment from 'moment';
 
 import styles from './orders.module.scss';
-import { useConfig, useReadContract } from 'wagmi';
+import { useAccount, useConfig, useReadContract } from 'wagmi';
 import { factoryABI } from '@/shared/constants';
 import { waitForTransactionReceipt, writeContract } from '@wagmi/core';
 import { useModalStore } from '@/entities/modal';
+import { useConnectWallet } from '@/features/connect-wallet';
 
 export const Orders: FC = () => {
     const { orders } = useOrdersStore();
@@ -55,6 +56,7 @@ const Order: FC<IOrder> = ({
         args: [depositAddress],
         abi: factoryABI,
     });
+    const { connected, connectClickHandler } = useConnectWallet();
 
     const status = useMemo(() => (data ? 'success' : 'in progress'), [data]);
     const config = useConfig();
@@ -63,13 +65,15 @@ const Order: FC<IOrder> = ({
 
     const cancelOrder = useCallback(async () => {
         try {
+            if (!connected) {
+                await connectClickHandler();
+            }
+
             showModal({
                 modalType: 'transactionLoader',
                 modalState: {
                     token1,
-                    token2,
                     amount1,
-                    amount2,
                     status: 'loading',
                     title: 'Canceling order',
                 },
@@ -94,15 +98,36 @@ const Order: FC<IOrder> = ({
                 title: 'Order canceled',
                 link: `https://sepolia.etherscan.io/tx/${txHash}`,
             });
-        } catch {}
+        } catch {
+            closeModal();
+        }
     }, [
         config,
+        connected,
         salt,
         token1.sepoliaAddress,
         removeOrder,
         closeModal,
         updateModalState,
     ]);
+
+    const { chainId } = useAccount();
+
+    const buttonContent = useMemo(() => {
+        if (chainId !== 11155111) {
+            return (
+                <Button disabled view="secondary" size="xs">
+                    Switch to Sepolia
+                </Button>
+            );
+        }
+
+        return (
+            <Button onClick={cancelOrder} size="xs">
+                Cancel
+            </Button>
+        );
+    }, [chainId]);
 
     return (
         <tr key={salt} className={styles.order}>
@@ -157,11 +182,7 @@ const Order: FC<IOrder> = ({
 
             <td>
                 <div className={styles.actions}>
-                    {status === 'in progress' ? (
-                        <Button onClick={cancelOrder} size="xs">
-                            Cancel
-                        </Button>
-                    ) : null}
+                    {status === 'in progress' ? <>{buttonContent}</> : null}
                 </div>
             </td>
         </tr>

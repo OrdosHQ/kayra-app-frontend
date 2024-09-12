@@ -1,15 +1,13 @@
 'use client';
 import { FC, useCallback } from 'react';
 import { useModalStore } from '@/entities/modal';
-import { Icons } from '@/assets';
+import { Button, TokenLogo } from '@/shared/ui';
+import Image from 'next/image';
 
 import styles from './transaction-loader.module.scss';
-import Image from 'next/image';
-import { Button, TokenLogo } from '@/shared/ui';
 
 export const TransactionLoader: FC = () => {
-    const { state } = useModalStore();
-    console.log(state);
+    const { state, closeModal } = useModalStore();
 
     const openLinkHandler = useCallback((link: string) => {
         return () => {
@@ -54,13 +52,21 @@ export const TransactionLoader: FC = () => {
                     </>
                 )}
             </div>
-            {state.link && (
+            {state.link ? (
+                <div className={styles.link}>
+                    <a href={state.link} target="_blank">
+                        Open in explorer
+                    </a>
+                </div>
+            ) : null}
+
+            {state.status === 'success' ? (
                 <div className={styles.footer}>
-                    <Button fill size="s" onClick={openLinkHandler(state.link)}>
-                        Open in Explorer
+                    <Button fill size="s" onClick={closeModal}>
+                        OK
                     </Button>
                 </div>
-            )}
+            ) : null}
         </div>
     );
 };
