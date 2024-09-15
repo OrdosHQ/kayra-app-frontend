@@ -22,9 +22,7 @@ export const TransactionLoader: FC = () => {
                     width={200}
                     height={200}
                     alt="loader"
-                    src={`/assets/icons/${
-                        state.status === 'loading' ? 'loader' : 'success'
-                    }.svg`}
+                    src={`/assets/icons/${state.status}.svg`}
                 />
             </div>
             <div className={styles.title}>{state?.title}</div>
@@ -59,6 +57,10 @@ export const TransactionLoader: FC = () => {
                     </a>
                 </div>
             ) : null}
+
+            {state.message && (
+                <div className={styles.error}>{state.message}</div>
+            )}
 
             {state.status === 'success' ? (
                 <div className={styles.footer}>

@@ -87,11 +87,14 @@ export const Faucet: FC = () => {
             updateModalState({
                 status: 'success',
             });
-        } catch (err) {
-            captureException(err);
+        } catch (err: any) {
+            updateModalState({
+                status: 'error',
+                title: 'Faucet failed',
+                message: err?.details ?? err?.message,
+            });
 
-            closeModal();
-            console.log(err);
+            captureException(err);
         }
     }, [
         config,

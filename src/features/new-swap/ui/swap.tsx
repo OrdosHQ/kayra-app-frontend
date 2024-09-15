@@ -359,7 +359,13 @@ export const Swap: FC = () => {
                 status: 'success',
                 link: `https://sepolia.etherscan.io/tx/${response.settlement_result.tx_hash}`,
             });
-        } catch (err) {
+        } catch (err: any) {
+            updateModalState({
+                status: 'error',
+                title: 'Swap failed',
+                message: err?.details ?? err?.message,
+            });
+
             captureException(err);
 
             if (depositTxHash) {
@@ -376,7 +382,7 @@ export const Swap: FC = () => {
                 });
             }
 
-            closeModal();
+            // closeModal();
         } finally {
             result1.refetch();
             result2.refetch();
@@ -400,18 +406,18 @@ export const Swap: FC = () => {
     const { chainId } = useAccount();
 
     const button = useMemo(() => {
-        if (chainId !== 11155111) {
-            return (
-                <Button fill disabled>
-                    Switch to Sepolia
-                </Button>
-            );
-        }
-
         if (!connected) {
             return (
                 <Button fill onClick={connectClickHandler}>
                     Connect Wallet
+                </Button>
+            );
+        }
+
+        if (chainId !== 11155111) {
+            return (
+                <Button fill disabled>
+                    Switch to Sepolia
                 </Button>
             );
         }

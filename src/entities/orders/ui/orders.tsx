@@ -98,8 +98,12 @@ const Order: FC<IOrder> = ({
                 title: 'Order canceled',
                 link: `https://sepolia.etherscan.io/tx/${txHash}`,
             });
-        } catch {
-            closeModal();
+        } catch (err: any) {
+            updateModalState({
+                status: 'error',
+                title: 'Failed to cancel order',
+                message: err?.details ?? err?.message,
+            });
         }
     }, [
         config,
